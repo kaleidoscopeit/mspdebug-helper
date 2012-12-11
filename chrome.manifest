@@ -1,0 +1,4 @@
+overlay		chrome://browser/content/browser.xul chrome://mspdebughelper/content/browserOverlay.xul
+content		mspdebughelper							chrome/content/
+skin			mspdebughelper		classic/1.0		chrome/skin/
+locale		mspdebughelper		it-IT				chrome/locale/it-IT/

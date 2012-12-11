@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+		"chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+		"chrome://mspdebughelper/locale/toolkit.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
+
+<overlay id="paneProgramOverlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <prefpane id="paneProgram">
+
+
+	</prefpane>
+
+</overlay>

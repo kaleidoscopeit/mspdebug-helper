@@ -1,0 +1,7 @@
+<!ENTITY toolkit.title								"MSPDebug Helper - Strumenti">
+<!ENTITY toolkit.window.width					"640">
+<!ENTITY toolkit.window.height				"480">
+
+<!ENTITY toolkit.pane.commands.label	"Comandi">
+<!ENTITY toolkit.pane.program.label		"Programma">
+

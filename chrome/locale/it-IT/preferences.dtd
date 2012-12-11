@@ -1,0 +1,21 @@
+<!ENTITY preferences.pane.about.label			"Informazioni">
+<!ENTITY preferences.pane.device.label		"Connessione">
+<!ENTITY preferences.pane.paths.label			"Percorsi">
+<!ENTITY preferences.pane.check.label			"Verifica">
+<!ENTITY preferences.title								"MSPDebug Helper - Pannello delle preferenze">
+<!ENTITY preferences.window.width					"480">
+<!ENTITY preferences.window.height				"320">
+
+
+<!ENTITY paths.choose.files.title				"Selezionare il percorso dei comandi">
+<!ENTITY paths.mspdebug.label						"MSPDebug">
+<!ENTITY paths.mspdebug.accesskey				"m">
+<!ENTITY paths.libmsp430.label					"libmsp430">
+<!ENTITY paths.libmsp430.accesskey			"i">
+
+<!ENTITY paths.choose.workdir.title			"Selezionare la directory di lavoro">
+<!ENTITY paths.workdir.label						"Percorso">
+<!ENTITY paths.workdir.accesskey				"P">
+
+<!ENTITY paths.choose.label							"Sfoglia...">
+<!ENTITY paths.choose.accesskey					"f">

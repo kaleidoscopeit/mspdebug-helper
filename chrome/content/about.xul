@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE overlay SYSTEM
+	"chrome://mspdebughelper/content/componentInfo.dtd">
+
+<overlay
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <prefpane id="paneAbout">
+ 
+		<groupbox align="center" orient="horizontal">
+
+			<vbox>
+				<hbox>
+					<image src="chrome://mspdebughelper/skin/logo.png" />
+					<spring flex="1"/>
+				</hbox>
+				<separator />
+				<text value="MSPDebug Helper" style="font-weight: bold; font-size: x-large;"/>
+				<text value="ver. &mspdebughelper.version;"/>
+				<separator/>
+				<text value="Created By:" style="font-weight: bold;"/>
+				<text value="&mspdebughelper.creator;" class="url"
+					onclick="window.open('http://gabriele.soundcafe.it/'); window.close();"/>
+				<separator class="thin"/>
+				<text value="Home Page:" style="font-weight: bold;"/>
+				<text value="&mspdebughelper.website;" class="url"
+					onclick="window.open('&mspdebughelper.website;'); window.close();"/>
+				<separator class="thin"/>
+			</vbox>
+			<spring flex="1"/>
+	
+		</groupbox>
+ 
+	</prefpane>
+
+</overlay>
+
+

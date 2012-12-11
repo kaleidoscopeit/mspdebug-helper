@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+		"chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+		"chrome://mspdebughelper/locale/preferences.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
+
+<overlay id="panePathsOverlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <prefpane id="panePaths" onpaneload="panePaths.init();">
+
+    <script type="application/javascript"
+			src="chrome://mspdebughelper/content/preferences/paths.js"/>
+
+		<preferences>
+      <preference id="extensions.mspdebughelper.programmer.paths_mspdebug"
+                  name="extensions.mspdebughelper.programmer.paths_mspdebug"
+                  type="file"/>
+
+      <preference id="extensions.mspdebughelper.programmer.paths_libmsp430"
+                  name="extensions.mspdebughelper.programmer.paths_libmsp430"
+                  type="file"/>
+
+      <preference id="extensions.mspdebughelper.programmer.paths_workdir"
+                  name="extensions.mspdebughelper.programmer.paths_workdir"
+                  type="file"/>
+		</preferences>
+
+    <stringbundle id="bundlePreferences"
+									src="chrome://mspdebughelper/locale/preferences.properties"/>
+
+		<groupbox>
+			<caption label="&paths.choose.files.title;"/>
+
+			<grid>
+				<columns>
+					<column/>
+					<column flex="1"/>
+					<column/>
+				</columns>
+				<rows>
+					<separator />
+					<row align="center">
+						<label value="&paths.mspdebug.label;"
+										accesskey="&paths.mspdebug.accesskey;"/>
+						<textbox preference="extensions.mspdebughelper.programmer.paths_mspdebug"
+										onsyncfrompreference="return panePaths.displayPath(this);"/>
+						<button oncommand="panePaths.chooseFilePath(this);"
+										label="&paths.choose.label;"
+										accesskey="&paths.choose.accesskey;"
+										preference="extensions.mspdebughelper.programmer.paths_mspdebug"/>
+					</row>
+					<row align="center">
+						<label value="&paths.libmsp430.label;"
+										accesskey="&paths.libmsp430.accesskey;"/>
+						<textbox preference="extensions.mspdebughelper.programmer.paths_libmsp430"
+										onsyncfrompreference="return panePaths.displayPath(this);"/>
+			      <button oncommand="panePaths.chooseFilePath(this);"
+										label="&paths.choose.label;"
+										accesskey="&paths.choose.accesskey;"
+										preference="extensions.mspdebughelper.programmer.paths_libmsp430"/>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<groupbox>
+			<caption label="&paths.choose.workdir.title;"/>
+
+			<grid>
+				<columns>
+					<column/>
+					<column flex="1"/>
+					<column/>
+				</columns>
+				<rows>
+					<separator />
+					<row align="center">
+						<label value="&paths.workdir.label;"
+										accesskey="&paths.workdir.accesskey;"/>
+						<textbox preference="extensions.mspdebughelper.programmer.paths_workdir"
+										onsyncfrompreference="return panePaths.displayPath(this);"/>
+						<button oncommand="panePaths.chooseDirectoryPath(this);"
+										label="&paths.choose.label;"
+										accesskey="&paths.choose.accesskey;"
+										preference="extensions.mspdebughelper.programmer.paths_workdir"/>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+
+	</prefpane>
+
+</overlay>

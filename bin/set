@@ -1,0 +1,6 @@
+paths_libmsp430=
+link=jtag
+voltage=3000
+driver=tilib
+paths_workdir=/home/MICROJET.LAN/gabriele.rossetti/mspdebug-workdir
+paths_mspdebug=aaab

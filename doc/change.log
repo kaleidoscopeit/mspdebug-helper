@@ -1,0 +1,11 @@
+01-08-2012
+
+	- Fixed write string function in order to avoid overlapping of sequences of erases and writes
+
+14-05-2012
+
+	- Various cleans to the project root
+
+01-02-2012
+
+	- Complete rewrite of the previous plugin

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+		"chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+		"chrome://mspdebughelper/locale/preferences.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
+
+<overlay id="paneDeviceOverlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <prefpane id="paneDevice">
+
+		<preferences>
+			<preference id="extensions.mspdebughelper.programmer.driver"
+									name="extensions.mspdebughelper.programmer.driver"
+									type="wstring"/>
+			<preference id="extensions.mspdebughelper.programmer.link"
+									name="extensions.mspdebughelper.programmer.link"
+									type="wstring"/>
+		</preferences>
+
+		<menulist preference="extensions.mspdebughelper.programmer.driver">
+			<menupopup>
+				<menuitem value="rf2500" label="rf2500"/>
+				<menuitem value="olimex" label="olimex"/>
+ 				<menuitem value="olimex-v1" label="olimex-v1"/>
+ 				<menuitem value="olimex-iso" label="olimex-iso"/>
+ 				<menuitem value="uif" label="uif"/>
+ 				<menuitem value="uif-bsl" label="uif-bsl"/>
+ 				<menuitem value="flash-bsl" label="flash-bsl"/>
+ 				<menuitem value="tilib" label="tilib"/>
+ 				<menuitem value="goodfet" label="goodfet"/>
+ 			</menupopup>
+		</menulist>
+
+		<menulist preference="extensions.mspdebughelper.programmer.link">
+			<menupopup>
+				<menuitem value="jtag" label="JTAG"/>
+				<menuitem value="sbw" label="Spy-Bi-Wire"/>
+ 			</menupopup>
+		</menulist>
+
+	</prefpane>
+
+</overlay>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://mspdebughelper/skin/overlay.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM
+	"chrome://mspdebughelper/locale/browserOverlay.dtd">
+
+<overlay id="mspdebughelper-browserOverlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script type="application/x-javascript"
+		src="chrome://mspdebughelper/content/browserOverlay.js"></script>
+
+	<stringbundleset>
+		<stringbundle id="mspdebughelper_bundlePreferences"
+			src="chrome://mspdebughelper/locale/browserOverlay.properties"/>
+    <stringbundle id="bundlePreferences"
+			src="chrome://mspdebughelper/locale/preferences.properties"/>
+	</stringbundleset>
+
+	<menupopup id="menu_ToolsPopup">
+		<menu insertafter="devToolsSeparator" label="MSPDebug Helper" accesskey="&mspdebughelper.menu.accesskey;">
+			<menupopup>
+				<menuitem label="&mspdebughelper.info.label;" oncommand="mspdebughelper.showAbout();"/>
+				<menuitem label="&mspdebughelper.pref.label;" oncommand="mspdebughelper.showPreferences();"/>
+				<menuitem label="&mspdebughelper.console.label;" oncommand="mspdebughelper.showConsole();"/>
+				<menuitem label="&mspdebughelper.toolkit.label;" oncommand="mspdebughelper.showToolkit();"/>
+			</menupopup>
+		</menu>
+	</menupopup> 
+
+</overlay>
+
