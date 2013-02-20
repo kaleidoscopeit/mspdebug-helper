@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://inspector/locale/inspector.dtd">
+
+<overlay id="ovInspector"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<tabpanel id="anonymous">     
+<vbox flex="1">
+  <hbox>
+  <label value="Anonymous log :"
+         flex="1"/>
+  <button label="Refresh"
+          oncommand="console.refresh_anonymous()"/>
+  </hbox>
+  <textbox id="anonymousLog" flex="1" multiline="true"/>
+</vbox>
+</tabpanel>
+</overlay>

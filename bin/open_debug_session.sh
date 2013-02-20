@@ -23,8 +23,8 @@ open_debug_session () {
 		close_debug_session
 	fi
 
-	# Find if exists a debug tool
-	DEVICE=`find_device`
+	# Find if a debug tool exists depending by the given driver
+	DEVICE=`find_device $driver`
 
 	if [ -z "$DEVICE" ]; then
 		debug -d "open_debug_session : Cannot find a debug tool.\n"
@@ -36,14 +36,22 @@ open_debug_session () {
 		return 5
 	fi
 
+  # set link type
+  if [ $link = "jtag" ]; then link="-j"; fi
+  
 	# Starts a debug session
 	if [ -n "$DEBUG" ]; then DEBUGSTRING=; fi
-	COMMAND="LD_LIBRARY_PATH=$paths_libmsp430 $paths_mspdebug tilib --allow-fw-update -d $DEVICE 'opt gdb_loop 1' 'gdb' &>$paths_workdir/gdb.log &"
+	COMMAND="LD_LIBRARY_PATH=$paths_libmsp430 $paths_mspdebug $driver "
+	COMMAND="$COMMAND --allow-fw-update $link -d $DEVICE 'opt gdb_loop 1' 'gdb' "
+  COMMAND="$COMMAND &>$paths_workdir/gdb.log &"
+  
 	debug -d "open_debug_session : "$COMMAND"\n"
 
-	LD_LIBRARY_PATH=$paths_libmsp430 $paths_mspdebug tilib --allow-fw-update -d $DEVICE 'opt gdb_loop 1' 'gdb' &>$paths_workdir/gdb.log &
+  eval  $COMMAND
 
+  # store pid
 	PID=$!
+
 	echo $PID>$paths_workdir/gdb.pid
 
 	# Waits 5 second for the opening of gdb listening port (2000)
@@ -59,7 +67,7 @@ open_debug_session () {
 					debug -d "open_debug_session : Specified target (`cat $paths_workdir/target.conf`) not found.\n"
 					kill -9 $PID >/dev/null 2>/dev/null
 
-					# Waits for the shutdown of gdb-proxy
+					# Waits for gdb-proxy shutdown
 					debug -d "open_debug_session : Wait for gdb-proxy stop..."
 					while [ ! -z "`ps -p "$PID" | grep "$PID"`" ]; do
 						debug "."

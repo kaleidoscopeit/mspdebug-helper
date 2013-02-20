@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://inspector/locale/inspector.dtd">
+
+<overlay id="ovInspector"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<tabpanel id="main">     
+<vbox flex="1">
+  <hbox>
+  <label value="Main log :"
+         flex="1"/>
+  <button label="Refresh"
+          oncommand="console.refresh_mainlog()"/>
+  </hbox>
+  <textbox id="mainLog" flex="1" multiline="true"/>
+</vbox>
+</tabpanel>
+</overlay>

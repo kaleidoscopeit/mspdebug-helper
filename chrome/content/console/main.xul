@@ -3,7 +3,6 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>   
 
 
-
 <!DOCTYPE overlay [
   <!ENTITY % componentInfoDTD SYSTEM
 		"chrome://mspdebughelper/content/componentInfo.dtd">
@@ -13,29 +12,34 @@
   %preferencesDTD;
 ]>
 
+<?xul-overlay href="chrome://mspdebughelper/content/console/anonymous.xul"?>
+<?xul-overlay href="chrome://mspdebughelper/content/console/general.xul"?>
+
 <window id="consoleWindow"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         title="&console.title;"
         width="&console.window.width;"
         height="&console.window.height;"
+        onload="console.init()"
         persist="width height screenX screenY">
 
 	<script type="application/x-javascript"
 					src="chrome://mspdebughelper/content/console/main.js" />
 
-	<tabbox id="myTabList" selectedIndex="2">
+	<tabbox id="myTabList" selectedIndex="0" flex="1">
 		<tabs>
-		  <tab label="&console.mainlog.label;"/>
-		  <tab label="Second tab"/>
+		  <tab label="&console.anonymous.label;" />
+		  <tab label="&console.general.label;"/>
 		  <tab label="Another tab"/>
 		  <tab label="Last tab"/>
 		</tabs>
-		<tabpanels>
-		  <tabpanel><!-- tabpanel First elements go here --></tabpanel>
-		  <tabpanel><!-- tabpanel Second elements go here --></tabpanel>
+		<tabpanels flex="1">
+		  <tabpanel id="anonymous"></tabpanel>
+		  <tabpanel id="main"></tabpanel>
 		  <tabpanel><button label="Click me"/></tabpanel>
 		  <tabpanel><!-- tabpanel Fourth elements go here --></tabpanel>
 		</tabpanels>
 	</tabbox>
 
 </window>
+

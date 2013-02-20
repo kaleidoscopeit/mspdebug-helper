@@ -1,6 +1,6 @@
 paths_libmsp430=/home/MICROJET.LAN/gabriele.rossetti/Scrivania/Documenti/MSPDebugHelper_refusees/bin/libmsp430.so
 link=jtag
 voltage=3000
-driver=tilib
+driver=olimex
 paths_workdir=/home/MICROJET.LAN/gabriele.rossetti/mspdebug-workdir
-paths_mspdebug=/home/MICROJET.LAN/gabriele.rossetti/Scrivania/Documenti/MSPDebugHelper_refusees/bin/mspdebug
+paths_mspdebug=/home/MICROJET.LAN/gabriele.rossetti/Scrivania/Documenti/Programmazione/mspdebug/mspdebug
