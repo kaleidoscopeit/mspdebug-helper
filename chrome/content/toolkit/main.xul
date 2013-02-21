@@ -6,7 +6,7 @@
   <!ENTITY % componentInfoDTD SYSTEM
     "chrome://mspdebughelper/content/componentInfo.dtd">
   <!ENTITY % preferencesDTD SYSTEM
-    "chrome://mspdebughelper/locale/toolkit.dtd">
+    "chrome://mspdebughelper/locale/mspdebughelper.dtd">
   %componentInfoDTD;
   %preferencesDTD;
 ]>
@@ -16,7 +16,7 @@
         title="&toolkit.title;"
         width="&toolkit.window.width;"
         height="&toolkit.window.height;"
-        onload="rawCommands.init()"
+        onload="toolkit.init()"
         persist="width height screenX screenY">
 
   <script type="application/x-javascript"
@@ -43,9 +43,9 @@
   </toolbox>
 
   <tabbox id="toolkitTabbox"
-          selectedIndex="0"
+          selectedIndex="1"
           flex="1">
-     <tabs hidden="true">
+    <tabs hidden="true">
       <tab/><tab/><tab/><tab/>
     </tabs>
     <tabpanels flex="1">
@@ -53,25 +53,74 @@
         <button label="command"
                 oncommand="rawCommands.open_debug_session()"/>
       </tabpanel>
+      
       <tabpanel id="PanelProgram">
-        <button label="program"/>
-      </tabpanel>
-      <tabpanel>
-      </tabpanel>
-      <tabpanel>
-        <!-- tabpanel Fourth elements go here -->
+      <vbox flex="1">
+        <hbox>
+          <groupbox flex="2">
+            <caption label="&toolkit.program.label;"/>    
+            <grid>
+              <columns>
+                <column/>
+                <column flex="1"/>
+                <column/>
+              </columns>
+              <rows>
+                <separator />
+                <row align="center">
+                  <label value="&toolkit.program.firmware.label;"/>
+                  <textbox id="hexfile"
+                           title="&toolkit.program.firmware.title;"/>
+                  <button oncommand="mspdebughelper.file_picker(document.getElementById('hexfile'));"
+                          label="&toolkit.program.choose.label;"
+                          accesskey="&toolkit.program.choose.accesskey;"/>
+                </row>
+                <row align="center">
+                  <label value="&toolkit.program.device.label;"/>
+              		<menulist id="device">
+              			<menupopup id="device_list">
+              				<menuitem value="null" label="&toolkit.program.device.null;"/>
+                		</menupopup>
+              		</menulist>
+                </row>
+                <row align="center">
+                  <label value="&toolkit.program.erase.label;"/>
+              		<menulist id="erase">
+              			<menupopup>
+              				<menuitem value="all"
+              				          label="&toolkit.program.erase.all;"/>
+              				<menuitem value="main"
+              				          label="&toolkit.program.erase.main;"/>
+              			</menupopup>
+              		</menulist>
+                </row>
+  
+              </rows>
+            </grid>
+          </groupbox>
+          <separator style="border-left:2px groove lightgrey;"/>
+          <groupbox flex="1">
+            <caption label="&toolkit.program.do.label;"/>
+            <separator />
+            <button oncommand="toolkit.epv.start();"
+                    label="&toolkit.program.do.epv;"/>
+
+            <button oncommand="toolkit.prog.start();"
+                    label="&toolkit.program.do.prog;"/>
+
+            <button oncommand="toolkit.ver.start();"
+                    label="&toolkit.program.do.ver;"/> 
+          </groupbox>
+        </hbox>
+        <groupbox flex="1">
+          <label value="Console log :"/>
+          <separator />
+          <textbox id="console"
+                   flex="1"
+                   multiline="true"/> 
+        </groupbox>
+        </vbox>
       </tabpanel>
     </tabpanels>
   </tabbox>
-<!--
-  <prefpane id="paneCommans" 
-            label="&toolkit.pane.commands.label;"
-            image="chrome://mspdebughelper/skin/icons/commands.48.png"
-            src="chrome://mspdebughelper/toolkit/commands.xul"/>
-  <prefpane id="paneProgram"
-            label="&toolkit.pane.program.label;"
-            image="chrome://mspdebughelper/skin/icons/program.48.png"
-            src="chrome://mspdebughelper/content/toolkit/program.xul" />
--->
-
 </window>

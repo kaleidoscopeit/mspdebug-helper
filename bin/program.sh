@@ -556,47 +556,6 @@ write_string () {
 }
 
 # ===============================================================================
-# Erase helper - all, main, segment addess length
-# ===============================================================================
-
-erase () {
-	# Find for any already started session
-	check_debug_session
-	local ret_val=$?
-
-	if [ "$ret_val" -ne "0" ]; then
-		debug -d "erase : session check failed.\n"
-		return 3;
-	fi
-
-	if [ "$1" = "all" ]; then
-		debug -d "erase : Erase ALL target memory ... "
-
-		echo "---------- ERASE SHOT ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_workdir/command_shots.log
-
-		./msp430-gdb --batch \
-			-ex "target remote localhost:2000"\
-			-ex "erase all " >>$paths_workdir/command_shots.log 2>$paths_workdir/erase_error.log
-
-		local status=$?
-		if [ $status != "0" ]; then
-			debug "FAIL\n"
-			return 1
-		fi
-		debug "OK\n"
-		return 0
-	else
-
-
-
-# TOOOOOOOOOOOOOOOOOOOOOODOOOOOOOOOOOOOOOOOOOOOOO
-
-		ERASE_RANGE=$ERASE_RANGE" "$PARAM
-		echo "Cancello "`echo $ERASE_RANGE | cut -f2 -d' '`" byte partendo dall'indirizzo di memoria "`echo $ERASE_RANGE | cut -f1 -d' '`
-	fi
-}
-
-# ===============================================================================
 # Debug messages helper
 # ===============================================================================
 
@@ -685,6 +644,8 @@ cd "$SCRIPTDIR"
 source settings
 source find_device.sh
 source open_debug_session.sh
+source get_supported_devices.sh
+source erase.sh
 
 # Builds the workdir structure
 mkdir -p $paths_workdir/save
@@ -700,6 +661,9 @@ read_params
 case "$COMMAND" in
 	find_device)
 		find_device $argv
+		;;
+	get_supported_devices)
+		get_supported_devices
 		;;
 	open_debug_session)
 		open_debug_session

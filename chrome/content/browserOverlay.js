@@ -31,6 +31,8 @@ mspdebughelper = {
       Components.classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch)
         .getBranch("extensions.mspdebughelper.programmer.");
+        
+        
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.driver"));
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.paths_mspdebug"));
 
@@ -133,7 +135,9 @@ mspdebughelper = {
     processInstance.init(commandInstance);
 
     if (!commandInstance.isExecutable()) {
-      Application.console.log("mspdebughelper : " + this._bundlePreferences.getFormattedString("notExecutableFile",[this.addonLocation + "/bin/program.sh"]));
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("notExecutableFile"
+          ,[this.addonLocation + "/bin/program.sh"]));
       return false;
     }
 
@@ -181,7 +185,8 @@ mspdebughelper = {
     processInstance.init(commandInstance);
 
     if (!commandInstance.isExecutable()) {
-      Application.console.log("mspdebughelper : " + this._bundlePreferences.getFormattedString("notExecutableFile",[commandPath]));
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("notExecutableFile",[commandPath]));
       return false;
     }
 
@@ -276,7 +281,8 @@ mspdebughelper = {
         & commandInstance.isExecutable())
       return mspdebug;
     else
-      Application.console.log("mspdebughelper : " + this._bundlePreferences.getFormattedString("notExecutableFile",[mspdebug]));
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("notExecutableFile",[mspdebug]));
       return false
   },
 
@@ -296,7 +302,8 @@ mspdebughelper = {
     if (driver != 'tilib') return true;
 
     if (libmsp430 == null | libmsp430 == '') {
-      Application.console.log("mspdebughelper : " + this._bundlePreferences.getFormattedString("notSetLibmsp430",[]));
+      Application.console.log("mspdebughelper : "
+        + this._bundlePreferences.getFormattedString("notSetLibmsp430",[]));
       return false;
     }
 
@@ -305,19 +312,90 @@ mspdebughelper = {
 
     commandInstance.initWithPath(libmsp430);
 
-    if (commandInstance.isFile() 
-        & commandInstance.isReadable())
+    if (commandInstance.isFile() & commandInstance.isReadable())
+
       return libmsp430;
+      
     else
-      Application.console.log("mspdebughelper : " + this._bundlePreferences.getFormattedString("notValidLibmsp430",[libmsp430]));
+
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("notValidLibmsp430",[libmsp430]));
+
       return false
-  },  
+
+  },
+
+  read: function(target, param = null)
+  {
+    let workDir = this.getWorkdir();
+
+    if (!workDir) {
+      alert(gBrowser
+            .mspdebughelper
+            ._bundlePreferences
+            .getString("notValidWorkdir"));
+            
+      return false;
+    }
+
+    switch(target) {
+      case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
+      case 'main' :      path = workDir + "/main.log";               break;      
+      case 'gdb' :       path = workDir + "/gdb.log";                break;
+    }
+
+    var file = Components.classes["@mozilla.org/file/local;1"]
+              .createInstance(Components.interfaces.nsILocalFile);
+           
+    file.initWithPath(path);
+    
+    var data = "";
+    var fstream = Components
+                 .classes["@mozilla.org/network/file-input-stream;1"]
+                 .createInstance(Components.interfaces.nsIFileInputStream);
+    var cstream = Components
+                 .classes["@mozilla.org/intl/converter-input-stream;1"]
+                 .createInstance(Components.interfaces.nsIConverterInputStream);
+                  
+    fstream.init(file, -1, 0, 0);
+    cstream.init(fstream, "UTF-8", 0, 0);
+     
+    let (str = {}) {
+      let read = 0;
+      do { 
+        read  = cstream.readString(0xffffffff, str);
+        data += str.value;
+      } while (read != 0);
+    }
+ 
+    cstream.close();
+     
+    return data;
+  },
+
+  file_picker: function(target)  
+  {  
+    const nsIFilePicker = Components.interfaces.nsIFilePicker;  
+    const nsILocalFile  = Components.interfaces.nsILocalFile;  
+    
+    var fp = Components.classes["@mozilla.org/filepicker;1"]  
+                       .createInstance(nsIFilePicker);  
+    
+    var title = target.getAttribute("title");  
+    
+    fp.appendFilters(nsIFilePicker.filterApps);  
+    fp.init(window, title, nsIFilePicker.modeOpen);  
+    
+    if (fp.show() == nsIFilePicker.returnOK) {  
+  	 target.value = fp.file.path;  
+    }  
+  }
 }
 
 
-/**
- * Initialize extension's javascript
- */
+/*****************************************************************************
+ * Attach initialization code to onload event
+ *****************************************************************************/
 window.addEventListener(
   "load",
   function(){mspdebughelper.init();},

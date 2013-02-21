@@ -2,15 +2,15 @@
 
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-  <tabpanel id="anonymous">     
+  <tabpanel id="mspdebug">     
     <vbox flex="1">
       <hbox>
-        <label value="Anonymous log :"
+        <label value="MSPDebug log :"
                flex="1"/>
         <button label="Refresh"
-                oncommand="console.fill_console('anonymous')"/>
+                oncommand="console.fill_console('gdb')"/>
       </hbox>
-      <textbox id="anonymousLog"
+      <textbox id="gdbLog"
                flex="1"
                multiline="true"/>
     </vbox>

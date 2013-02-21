@@ -1,0 +1,61 @@
+<!ENTITY mspdebughelper.menu.accesskey          "M">
+<!ENTITY mspdebughelper.info.label              "Informazioni">
+<!ENTITY mspdebughelper.pref.label              "Preferenze">
+<!ENTITY mspdebughelper.console.label           "Console di debug">
+<!ENTITY mspdebughelper.toolkit.label           "Strumenti">
+
+<!ENTITY console.title                          "MSPDebug Helper - Cosole di debug">
+<!ENTITY console.window.width                   "640">
+<!ENTITY console.window.height                  "480">
+
+<!ENTITY console.anonymous.label                "Anonimo">
+<!ENTITY console.general.label                  "Generale">
+<!ENTITY console.mspdebug.label                 "MspDebug">
+
+<!ENTITY preferences.pane.about.label           "Informazioni">
+<!ENTITY preferences.pane.device.label          "Connessione">
+<!ENTITY preferences.pane.paths.label           "Percorsi">
+<!ENTITY preferences.pane.check.label           "Verifica">
+<!ENTITY preferences.title                      "MSPDebug Helper - Pannello delle preferenze">
+<!ENTITY preferences.window.width               "480">
+<!ENTITY preferences.window.height              "320">
+
+<!ENTITY preferences.paths.files.title          "Selezionare il percorso dei comandi">
+<!ENTITY preferences.paths.mspdebug.label       "MSPDebug">
+<!ENTITY preferences.paths.mspdebug.accesskey   "m">
+<!ENTITY preferences.paths.libmsp430.label      "libmsp430">
+<!ENTITY preferences.paths.libmsp430.accesskey  "i">
+<!ENTITY preferences.paths.msp430gdb.label      "msp430-gdb">
+<!ENTITY preferences.paths.msp430gdb.accesskey  "g">
+
+<!ENTITY preferences.paths.workdir.title        "Selezionare la directory di lavoro">
+<!ENTITY preferences.paths.workdir.label        "Percorso">
+<!ENTITY preferences.paths.workdir.accesskey    "P">
+
+<!ENTITY preferences.paths.choose.label          "Sfoglia...">
+<!ENTITY preferences.paths.choose.accesskey      "f">
+
+<!ENTITY toolkit.title								           "MSPDebug Helper - Strumenti">
+<!ENTITY toolkit.window.width					           "640">
+<!ENTITY toolkit.window.height				           "480">
+
+<!ENTITY toolkit.pane.commands.label	           "Comandi">
+<!ENTITY toolkit.pane.program.label		           "Programma">
+
+<!ENTITY toolkit.program.label    		           "Procedura automatizzata di caricamento firmware">
+<!ENTITY toolkit.program.firmware.label          "Firmware : ">
+<!ENTITY toolkit.program.firmware.title          "Selezionare il file HEX da caricare">
+<!ENTITY toolkit.program.choose.label            "Sfoglia...">
+<!ENTITY toolkit.program.choose.accesskey        "f">
+
+<!ENTITY toolkit.program.device.label            "Dispositivo : ">
+<!ENTITY toolkit.program.device.null             "Selezionare il dispositivo ...">
+
+<!ENTITY toolkit.program.erase.label             "Cancellare :">
+<!ENTITY toolkit.program.erase.all               "Tutta la memoria (ALL)">
+<!ENTITY toolkit.program.erase.main              "Solo la memoria programma (MAIN)">
+
+<!ENTITY toolkit.program.do.label                "Esegui : ">
+<!ENTITY toolkit.program.do.epv                  "EPV">
+<!ENTITY toolkit.program.do.prog                 "Programma">
+<!ENTITY toolkit.program.do.ver                  "Verifica">

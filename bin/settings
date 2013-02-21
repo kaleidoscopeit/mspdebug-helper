@@ -4,3 +4,4 @@ voltage=3000
 driver=olimex
 paths_workdir=/home/MICROJET.LAN/gabriele.rossetti/mspdebug-workdir
 paths_mspdebug=/home/MICROJET.LAN/gabriele.rossetti/Scrivania/Documenti/Programmazione/mspdebug/mspdebug
+paths_msp430gdb=/usr/bin/msp430-gdb
