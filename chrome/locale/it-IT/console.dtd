@@ -1,7 +1,0 @@
-<!ENTITY console.title                "MSPDebug Helper - Cosole di debug">
-<!ENTITY console.window.width         "640">
-<!ENTITY console.window.height        "480">
-
-<!ENTITY console.anonymous.label      "Anonimo">
-<!ENTITY console.general.label        "Generale">
-
