@@ -22,10 +22,14 @@
                   name="extensions.mspdebughelper.programmer.paths_mspdebug"
                   type="file"/>
 
+      <preference id="extensions.mspdebughelper.programmer.paths_msp430gdb"
+                  name="extensions.mspdebughelper.programmer.paths_msp430gdb"
+                  type="file"/>
+
       <preference id="extensions.mspdebughelper.programmer.paths_libmsp430"
                   name="extensions.mspdebughelper.programmer.paths_libmsp430"
                   type="file"/>
-
+                  
       <preference id="extensions.mspdebughelper.programmer.paths_workdir"
                   name="extensions.mspdebughelper.programmer.paths_workdir"
                   type="file"/>

@@ -48,8 +48,9 @@
 <!ENTITY toolkit.program.choose.label            "Sfoglia...">
 <!ENTITY toolkit.program.choose.accesskey        "f">
 
-<!ENTITY toolkit.program.device.label            "Dispositivo : ">
-<!ENTITY toolkit.program.device.null             "Selezionare il dispositivo ...">
+<!ENTITY toolkit.program.target.label            "Dispositivo : ">
+<!ENTITY toolkit.program.target.null             "Selezionare il dispositivo ...">
+<!ENTITY toolkit.program.target.auto             "Rilevamento automatico">
 
 <!ENTITY toolkit.program.erase.label             "Cancellare :">
 <!ENTITY toolkit.program.erase.all               "Tutta la memoria (ALL)">

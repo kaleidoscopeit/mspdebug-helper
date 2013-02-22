@@ -19,23 +19,22 @@ var toolkit = {
       
     window.mspdebughelper = this.mainWindow.gBrowser.mspdebughelper;
 
-    // populate device popup-menu
-    this.device_list = document.getElementById("device_list"); 
-    this.get_supported_devices();
+    // populate target popup-menu
+    this.target_list = document.getElementById("target_list"); 
+    this.fet_target  = {fet:[],olimex:[]};
+    this.get_supported_targets();
   },
 
-  get_supported_devices: function()
+  get_supported_targets: function()
   {
     this.mainWindow.toolkit = this;
 
-    mspdebughelper.callCommand('get_supported_devices', [], function()
+    mspdebughelper.callCommand('get_supported_targets', [], function()
     {
-      let data            = mspdebughelper.read('gdb').split('\n');
-      toolkit.fet_devices = {fet:[],olimex:[]};
+      let data = mspdebughelper.read('gdb').split('\n');
       let cfamily;
 
       for(let i=0;i<data.length;i++) {
-
         if(data[i] == "Devices supported by FET driver:")
           cfamily = "fet";
           
@@ -43,23 +42,33 @@ var toolkit = {
           cfamily = "olimex";
   
         else 
-          toolkit.fet_devices[cfamily] = 
-            toolkit.fet_devices[cfamily].concat(
+          toolkit.fet_target[cfamily] = 
+            toolkit.fet_target[cfamily].concat(
               data[i].replace(/ +/g, ' ')
                      .replace(/(^[\s]+|[\s]+$)/g,'')
                      .split(' ')
             );
       }
 
-      toolkit.fet_devices['fet'].sort();
-      toolkit.fet_devices['olimex'].sort();
+      toolkit.fet_target['fet'].sort();
+      toolkit.fet_target['olimex'].sort();
       
-      for(let i=0;i<toolkit.fet_devices.olimex.length;i++) {
+      for(let i=0;i<toolkit.fet_target.olimex.length;i++) {
         new_item    = document.createElement("menuitem");
-        toolkit.device_list.appendChild(new_item);
-        new_item.value = new_item.label = toolkit.fet_devices.olimex[i];
+        toolkit.target_list.appendChild(new_item);
+        new_item.value = new_item.label = toolkit.fet_target.olimex[i];
      }
     });
+  },
+
+  fill_console: function(target)
+  {
+    let data = mspdebughelper.read(target);
+    let target_console = document.getElementById(target+'Log');
+    target_console.value = data;
+    let pos = target_console.value.length;
+    target_console.selectionStart = pos;
+    target_console.selectionEnd = pos;
   },
 };
 
@@ -69,11 +78,11 @@ toolkit.epv = {
             
   start:function(){
     toolkit.hexfile = document.getElementById('hexfile').value;
-    toolkit.device  = document.getElementById('device').value;
+    toolkit.target  = document.getElementById('target').value;
     toolkit.erase   = document.getElementById('erase').value;
     toolkit.console = document.getElementById('console');
 
-    pmon=setInterval("console.value = console.value + '.';",500);
+    toolkit.pmon=setInterval("toolkit.fill_console('main')",1000);
     this.batch_count = 0;        
     this.call_batch();
   },
@@ -82,6 +91,14 @@ toolkit.epv = {
   // This is the way I prefer because it's possible to create a good clean stack
 
   batch:Array(
+    // ---- CLEAN PREVIOUS SESSION ---- //
+    function(){
+      mspdebughelper.callCommand('clean_debug_session', [], function(data){
+        // call next batch event
+        toolkit.epv.call_batch();
+      })
+    },
+    
     // ---- CLOSE PREVIOUS SESSION ---- //
     function(){
       mspdebughelper.callCommand('close_debug_session', [], function(data){
@@ -92,16 +109,16 @@ toolkit.epv = {
 
     // ---- SELECT TARGET ---- //  
     function(){
-      mspdebughelper.callCommand('select_target', [toolkit.device], function(data){
+      mspdebughelper.callCommand('select_target', [toolkit.target], function(data){
         switch(data.result){
           // All done
           case 0:
             toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default :
-            throw('unhandled error');
+            throw('select_target: unhandled exception');
         }
       })
     },
@@ -112,17 +129,17 @@ toolkit.epv = {
         switch(data.result){
           // debug tool not found
           case 4:
-            throw('debug tool not found');
+            throw('open_debug_session: debug tool not found');
             break;
 
           // access to the debug tool denied
           case 5:
-            throw('access to the debug tool denied')
+            throw('open_debug_session: access to the debug tool denied')
             break;
 
           // target not found
           case 6:
-            throw('target not found');
+            throw('open_debug_session: target not found');
             break;
 
           // All done
@@ -130,9 +147,9 @@ toolkit.epv = {
             toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default :
-            throw('unhandled error');
+            throw('open_debug_session: unhandled exception');
         }
       })
     },
@@ -143,7 +160,7 @@ toolkit.epv = {
         switch(data.result){
           // firmware file download error
           case 4:
-            throw('firmware file download error');
+            throw('select_firmware: firmware file download error');
             break;
 
           // All done
@@ -151,9 +168,9 @@ toolkit.epv = {
             toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default:
-            throw('unhandled error');
+            throw('select_firmware: unhandled exception');
         }
       })
     },
@@ -167,9 +184,9 @@ toolkit.epv = {
             toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default :
-            throw('unhandled error');
+            throw('erase: unhandled exception');
          }              
       })
     },
@@ -177,11 +194,10 @@ toolkit.epv = {
     // ---- PROGRAM TARGET ---- //
     function(){
       mspdebughelper.callCommand('program', [], function(data){
-        clearInterval(pmon);
         switch(data.result){
           // program error
           case 5:
-            throw('program error');
+            throw('program: program error');
             break;
 
           // All done
@@ -189,9 +205,9 @@ toolkit.epv = {
             toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default :
-            throw('unhandled error');  
+            throw('program: unhandled exception');  
         }
       })
     },
@@ -199,33 +215,42 @@ toolkit.epv = {
     // ---- VERIFY TARGET ---- //
     function(){
       mspdebughelper.callCommand('verify', [], function(data){
-        clearInterval(pmon);
         switch(data.result){
           // firmware issue
           case 4:
-            throw('firmware issue');
+            throw('verify: firmware issue');
             break;
 
           // memory dump error
           case 5:
-            throw('memory dump error');
+            throw('verify: memory dump error');
             break;
 
           // verify error
           case 6:
-            throw('verify error');
+            throw('verify: verify error');
             break;
 
           // All done
           case 0:
+            toolkit.epv.call_batch();
             break;
 
-          // unhandled error
+          // unhandled exception
           default:
-            throw('unhandled error');
+            throw('verify: unhandled exception');
         }
       })
-    }  
+    },
+ 
+    // ---- CLOSE SESSION ---- //
+    function(){
+      mspdebughelper.callCommand('close_debug_session', [], function(data){
+        // stops monitor
+        clearInterval(toolkit.pmon);
+        toolkit.fill_console('main');
+      })
+    }    
   ),
 
   call_batch:function(){

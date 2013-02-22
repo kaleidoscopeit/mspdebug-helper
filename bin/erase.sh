@@ -18,13 +18,17 @@ erase () {
   
   		echo "---------- ERASE SHOT ON DATE `date +"%b %d %H:%M:%S"` ----------"\
   		  >>$paths_workdir/command_shots.log
+
+      COMMAND="$paths_msp430gdb --batch"
+  		COMMAND="$COMMAND -ex \"target remote localhost:2000\""
+  	  COMMAND="$COMMAND -ex \"erase all \""
+  	  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
+  	  COMMAND="$COMMAND 2>$paths_workdir/erase_error.log"
   
-  		./msp430-gdb --batch \
-  			-ex "target remote localhost:2000"\
-  			-ex "erase all "\
-  			 >>$paths_workdir/command_shots.log\
-  			 2>$paths_workdir/erase_error.log
-  
+      echo $COMMAND>>$paths_workdir/command_shots.log
+      
+      eval $COMMAND
+      
   		local status=$?
   		if [ $status != "0" ]; then
   			debug "FAIL\n"

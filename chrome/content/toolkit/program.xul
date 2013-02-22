@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+    "chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+    "chrome://mspdebughelper/locale/mspdebughelper.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <tabpanel id="PanelProgram">
+  <vbox flex="1">
+    <hbox>
+      <groupbox flex="2">
+        <caption label="&toolkit.program.label;"/>    
+        <grid>
+          <columns>
+            <column/>
+            <column flex="1"/>
+            <column/>
+          </columns>
+          <rows>
+            <separator />
+            <row align="center">
+              <label value="&toolkit.program.firmware.label;"/>
+              <textbox id="hexfile"
+                       title="&toolkit.program.firmware.title;"/>
+              <button oncommand="mspdebughelper.file_picker(document.getElementById('hexfile'));"
+                      label="&toolkit.program.choose.label;"
+                      accesskey="&toolkit.program.choose.accesskey;"/>
+            </row>
+            <row align="center">
+              <label value="&toolkit.program.target.label;"/>
+          		<menulist id="target">
+          			<menupopup id="target_list">
+          				<menuitem value="null" label="&toolkit.program.target.null;"/>
+          				<menuitem value="auto" label="&toolkit.program.target.auto;"/>
+            		</menupopup>
+          		</menulist>
+            </row>
+            <row align="center">
+              <label value="&toolkit.program.erase.label;"/>
+          		<menulist id="erase">
+          			<menupopup>
+          				<menuitem value="all"
+          				          label="&toolkit.program.erase.all;"/>
+          				<menuitem value="main"
+          				          label="&toolkit.program.erase.main;"/>
+          			</menupopup>
+          		</menulist>
+            </row>
+
+          </rows>
+        </grid>
+      </groupbox>
+      <separator style="border-left:2px groove lightgrey;"/>
+      <groupbox flex="1">
+        <caption label="&toolkit.program.do.label;"/>
+        <separator />
+        <button oncommand="toolkit.epv.start();"
+                label="&toolkit.program.do.epv;"/>
+
+        <button oncommand="toolkit.prog.start();"
+                label="&toolkit.program.do.prog;"/>
+
+        <button oncommand="toolkit.ver.start();"
+                label="&toolkit.program.do.ver;"/> 
+      </groupbox>
+    </hbox>
+    <groupbox flex="1">
+      <label value="Console log :"/>
+      <separator />
+      <textbox id="mainLog"
+               flex="1"
+               multiline="true"/> 
+    </groupbox>
+    </vbox>
+  </tabpanel>
+</overlay>

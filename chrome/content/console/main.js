@@ -3,6 +3,11 @@ var console = {
   {
     window.gBrowser = window.opener.getBrowser();
     window.mspdebughelper =  gBrowser.mspdebughelper;
+    setInterval(function(){with(console){
+      fill_console('anonymous');
+      fill_console('main');
+      fill_console('gdb');
+    }},1000);
   },
 
   fill_console: function(target)
@@ -13,7 +18,6 @@ var console = {
     let pos = target_console.value.length;
     target_console.selectionStart = pos;
     target_console.selectionEnd = pos;
-
   },
 
   test: function()

@@ -32,7 +32,14 @@ mspdebughelper = {
         .getService(Components.interfaces.nsIPrefBranch)
         .getBranch("extensions.mspdebughelper.programmer.");
         
-        
+
+    this._prefService.addObserver("",{ 
+      observe:function(subject,topic,data) {
+        if(topic == "nsPref:changed") mspdebughelper.upgradeSettingsFile();
+      }
+    },false);
+    
+            
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.driver"));
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.paths_mspdebug"));
 
@@ -107,17 +114,17 @@ mspdebughelper = {
   {
     // some checks
     if (!this.getWorkdir()) {
-      alert(this._bundlePreferences.getString("notValidWorkdir"));
+      alert(this._bundlePreferences.getString("not_valid_workdir"));
       return false;
     }
 
-    if (!this.getMSPDebugExecutable()) {
-      alert(this._bundlePreferences.getString("notValidMSPDebug"));
+    if (!this.get_mspdebug_path()) {
+      alert(this._bundlePreferences.getString("not_valid_mspdebug"));
       return false;
     }
 
-    if (!this.checkLibmsp430()) {
-      alert(this._bundlePreferences.getString("notSetLibmsp430"));
+    if (!this.check_libmsp430()) {
+      alert(this._bundlePreferences.getString("not_valid_libmsp430"));
       return false;
     }
 
@@ -126,27 +133,18 @@ mspdebughelper = {
     this.commandIsRunning = true;
 
     // hooks main process
-    let commandInstance = Components.classes["@mozilla.org/file/local;1"]
-      .createInstance(Components.interfaces.nsILocalFile);
+    let commandPath     = this.addonLocation + "/bin/program.sh"
+    let commandInstance = this.get_file_instance(commandPath, true);
+
+    if (!commandInstance) {
+      alert(this._bundlePreferences.getString("not_valid_program"));
+      return false;
+    }
+            
     let processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
 
-    commandInstance.initWithPath(this.addonLocation + "/bin/program.sh");
     processInstance.init(commandInstance);
-
-    if (!commandInstance.isExecutable()) {
-      Application.console.log("mspdebughelper : " + this._bundlePreferences
-        .getFormattedString("notExecutableFile"
-          ,[this.addonLocation + "/bin/program.sh"]));
-      return false;
-    }
-
-    // futher actions made depending by the command
-    switch(commandName) {
-      case 'open_debug_session':
-        if (!this.upgradeSettingsFile()) return false;
-        break;
-    }
 
     data.unshift(commandName);    
 
@@ -170,25 +168,23 @@ mspdebughelper = {
     let workDir = this.getWorkdir();
 
     if (!this.getWorkdir()) {
-      alert(this._bundlePreferences.getString("notValidWorkdir"));
+      alert(this._bundlePreferences.getString("not_valid_workdir"));
       return false;
     }
 
     // hooks main process
-    let commandPath = this.addonLocation + "/bin/write_settings.sh";
-    let commandInstance = Components.classes["@mozilla.org/file/local;1"]
-      .createInstance(Components.interfaces.nsILocalFile);
-    let processInstance = Components.classes["@mozilla.org/process/util;1"]
-      .createInstance(Components.interfaces.nsIProcess);
+    let commandPath     = this.addonLocation + "/bin/write_settings.sh";
+    let commandInstance = this.get_file_instance(commandPath, true);
 
-    commandInstance.initWithPath(commandPath);
-    processInstance.init(commandInstance);
-
-    if (!commandInstance.isExecutable()) {
-      Application.console.log("mspdebughelper : " + this._bundlePreferences
-        .getFormattedString("notExecutableFile",[commandPath]));
+    if (!commandInstance) {
+      alert(this._bundlePreferences.getString("not_valid_write_settings"));
       return false;
     }
+ 
+    let processInstance = Components.classes["@mozilla.org/process/util;1"]
+      .createInstance(Components.interfaces.nsIProcess);
+      
+    processInstance.init(commandInstance);
 
     for (let key in this._preferences) {
       let propertyName = this._preferences[key];
@@ -260,36 +256,36 @@ mspdebughelper = {
       return false
   },
 
-  /**
-   * Checks if the MSPDebug executable has been defined and returs it's path
-   */
-  getMSPDebugExecutable: function()
+/*****************************************************************************
+ * Checks if the MSPDebug executable has been defined and returs it's path
+ *****************************************************************************/
+  get_mspdebug_path: function()
   {
     let mspdebug = this._prefService
       .getComplexValue("paths_mspdebug"
         ,Components.interfaces.nsIPrefLocalizedString).data;
 
-    if (mspdebug == null | mspdebug == '') return false;
+    if (mspdebug == null | mspdebug == '') {
+      Application.console.log("mspdebughelper : "
+        + this._bundlePreferences.getFormattedString("not_path_mspdebug",[]));
 
-    let commandInstance = Components.classes["@mozilla.org/file/local;1"]
-          .createInstance(Components.interfaces.nsILocalFile);
+      return false;
+    }
 
-    commandInstance.initWithPath(mspdebug);
-
-    if (commandInstance.isFile() 
-        & commandInstance.isReadable()
-        & commandInstance.isExecutable())
-      return mspdebug;
-    else
-      Application.console.log("mspdebughelper : " + this._bundlePreferences
-        .getFormattedString("notExecutableFile",[mspdebug]));
-      return false
+    let file = this.get_file_instance(mspdebug, true);
+     
+    if (file) return mspdebug;
+     
+    Application.console.log("mspdebughelper : " + this._bundlePreferences
+      .getFormattedString("not_valid_mspdebug",[mspdebug]));
+      
+    return false
   },
 
-  /**
-   * Checks if the path of libmsp430 if tilib driver as been set
-   */
-  checkLibmsp430: function()
+/*****************************************************************************
+ * Checks for a valid libmsp430.so if tilib driver has been set
+ *****************************************************************************/
+  check_libmsp430: function()
   {
     let libmsp430 = this._prefService
       .getComplexValue("paths_libmsp430"
@@ -303,26 +299,17 @@ mspdebughelper = {
 
     if (libmsp430 == null | libmsp430 == '') {
       Application.console.log("mspdebughelper : "
-        + this._bundlePreferences.getFormattedString("notSetLibmsp430",[]));
+        + this._bundlePreferences.getFormattedString("not_path_libmsp430",[]));
+
       return false;
     }
 
-    let commandInstance = Components.classes["@mozilla.org/file/local;1"]
-          .createInstance(Components.interfaces.nsILocalFile);
+    if (this.get_file_instance(libmsp430)) return true;
+    
+    Application.console.log("mspdebughelper : " + this._bundlePreferences
+      .getFormattedString("not_valid_libmsp430",[]));
 
-    commandInstance.initWithPath(libmsp430);
-
-    if (commandInstance.isFile() & commandInstance.isReadable())
-
-      return libmsp430;
-      
-    else
-
-      Application.console.log("mspdebughelper : " + this._bundlePreferences
-        .getFormattedString("notValidLibmsp430",[libmsp430]));
-
-      return false
-
+    return false;
   },
 
   read: function(target, param = null)
@@ -344,11 +331,11 @@ mspdebughelper = {
       case 'gdb' :       path = workDir + "/gdb.log";                break;
     }
 
-    var file = Components.classes["@mozilla.org/file/local;1"]
-              .createInstance(Components.interfaces.nsILocalFile);
-           
-    file.initWithPath(path);
+
+    let file = this.get_file_instance(path);
     
+    if (!file) return false;
+        
     var data = "";
     var fstream = Components
                  .classes["@mozilla.org/network/file-input-stream;1"]
@@ -373,6 +360,44 @@ mspdebughelper = {
     return data;
   },
 
+  get_file_instance: function(path,x=false)
+  {
+    var file = Components.classes["@mozilla.org/file/local;1"]
+              .createInstance(Components.interfaces.nsILocalFile);
+           
+    file.initWithPath(path);
+
+    if(!file.exists()) {
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("not_exists_file",[path]));
+        
+      return false;     
+    }
+ 
+    if(!file.isFile()) {
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("not_a_file",[path]));
+        
+      return false;     
+    }
+
+    if(!file.isReadable()) {
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("not_readable_file",[path]));
+
+      return false;      
+    }
+ 
+    if(!file.isExecutable() & x) {
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("not_executable_file",[path]));      
+
+      return false;
+    }
+     
+    return file;    
+  },
+  
   file_picker: function(target)  
   {  
     const nsIFilePicker = Components.interfaces.nsIFilePicker;  
