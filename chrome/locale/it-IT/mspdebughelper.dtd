@@ -58,5 +58,6 @@
 
 <!ENTITY toolkit.program.do.label                "Esegui : ">
 <!ENTITY toolkit.program.do.epv                  "EPV">
+<!ENTITY toolkit.program.do.erase                "Cancella">
 <!ENTITY toolkit.program.do.prog                 "Programma">
 <!ENTITY toolkit.program.do.ver                  "Verifica">

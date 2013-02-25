@@ -59,14 +59,34 @@
       <groupbox flex="1">
         <caption label="&toolkit.program.do.label;"/>
         <separator />
-        <button oncommand="toolkit.epv.start();"
-                label="&toolkit.program.do.epv;"/>
-
-        <button oncommand="toolkit.prog.start();"
-                label="&toolkit.program.do.prog;"/>
-
-        <button oncommand="toolkit.ver.start();"
-                label="&toolkit.program.do.ver;"/> 
+        <grid>
+          <columns>
+            <column />
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row height="40" style="border-bottom:1px solid red;">
+              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png" maxheight="24" maxwidth="24"/>
+              <button oncommand="toolkit.epv.start();"
+                      label="&toolkit.program.do.epv;" style="height:30px"/>
+            </row>
+            <row>  
+              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png"/>   
+              <button oncommand="toolkit.erase.start();"
+                      label="&toolkit.program.do.erase;"/>
+            </row>
+            <row>     
+              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png"/>
+              <button oncommand="toolkit.prog.start();"
+                      label="&toolkit.program.do.prog;"/>
+            </row>
+            <row>
+              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png" />
+              <button oncommand="toolkit.ver.start();"
+                      label="&toolkit.program.do.ver;"/>
+            </row>
+          </rows>
+        </grid> 
       </groupbox>
     </hbox>
     <groupbox flex="1">
