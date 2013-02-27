@@ -12,6 +12,7 @@
 ]>
 
 <?xul-overlay href="chrome://mspdebughelper/content/toolkit/program.xul"?>
+<?xul-overlay href="chrome://mspdebughelper/content/toolkit/mdump.xul"?>
 
 <window id="toolkitWindow"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -29,18 +30,27 @@
       <toolbarbutton width="80px"
                      type="radio"
                      group="mode"
-                     orient="vertical"
                      checked="true"
-                     label="&toolkit.pane.commands.label;"
-                     image="chrome://mspdebughelper/skin/icons/commands.48.png"
-                     oncommand="showPanel('panelCommands');"/>
-      <toolbarbutton width="80px"
-                     type="radio"
-                     group="mode"
                      orient="vertical"
                      label="&toolkit.pane.program.label;"
                      image="chrome://mspdebughelper/skin/icons/program.48.png"
                      oncommand="showPanel('PanelProgram');"/>
+
+      <toolbarbutton width="80px"
+                     type="radio"
+                     group="mode"
+                     orient="vertical"
+                     label="&toolkit.pane.mdump.label;"
+                     image="chrome://mspdebughelper/skin/icons/mdump.48.png"
+                     oncommand="showPanel('PanelMDump');"/>
+                                          
+      <toolbarbutton width="80px"
+                     type="radio"
+                     group="mode"
+                     orient="vertical"
+                     label="&toolkit.pane.commands.label;"
+                     image="chrome://mspdebughelper/skin/icons/commands.48.png"
+                     oncommand="showPanel('panelCommands');"/>
     </toolbar>
   </toolbox>
 
@@ -51,6 +61,7 @@
     </tabs>
     <tabpanels flex="1">
       <tabpanel id="PanelProgram"> </tabpanel>
+      <tabpanel id="PanelMDump"> </tabpanel>
       <tabpanel id="panelCommands">
         <button label="command"
                 oncommand="rawCommands.open_debug_session()"/>

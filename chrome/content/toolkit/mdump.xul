@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+    "chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+    "chrome://mspdebughelper/locale/mspdebughelper.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <tabpanel id="PanelMDump">
+  <vbox flex="1">
+    <hbox>
+      <groupbox flex="3">
+        <caption label="&toolkit.dump_mem.label;"/>    
+        <grid>
+          <columns>
+            <column/>
+            <column flex="1"/>
+            <column/>
+          </columns>
+          <rows>
+            <separator />
+            <row align="center">
+              <label value="&toolkit.dump_mem.type.label;"/>
+          		<menulist id="dump_type">
+          			<menupopup>
+          				<menuitem value="all"
+          				          label="&toolkit.dump_mem.type.all;"/>
+          				<menuitem value="main"
+          				          label="&toolkit.dump_mem.type.main;"/>
+          				<menuitem value="info"
+          				          label="&toolkit.dump_mem.type.info;"/>
+          			</menupopup>
+          		</menulist>
+            </row>
+
+          </rows>
+        </grid>
+      </groupbox>
+      <separator style="border-left:2px groove lightgrey;"/>
+      <groupbox flex="1">
+        <caption label="&toolkit.dump_mem.do.label;"/>
+        <separator />
+        <grid>
+          <columns>
+            <column />
+            <column flex="1"/>
+          </columns>
+          <rows>
+            <row style="margin-bottom:5px">
+              <image id="status_ico_mdump"
+                     src="chrome://mspdebughelper/skin/icons/ok.png" />
+              <button oncommand="toolkit.mdump.start();"
+                      label="&toolkit.dump_mem.do.read;"
+                      style="margin:-1px 0 -1px 5px"/>
+            </row>
+          </rows>
+        </grid> 
+      </groupbox>
+    </hbox>
+    <groupbox flex="1">
+      <label value="Console log :"/>
+      <separator />
+      <textbox id="dumpConsole"
+               style="font-family: mono;"
+               flex="1"
+               multiline="true"/> 
+    </groupbox>
+    </vbox>
+  </tabpanel>
+</overlay>

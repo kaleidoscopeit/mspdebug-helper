@@ -37,8 +37,8 @@ program () {
   echo $COMMAND>>$paths_workdir/command_shots.log
   
   eval $COMMAND
-      
-	ret_val=$((`cat $paths_workdir/program_error.log | grep -c -i 'Load failed'`))
+
+	ret_val=$((`cat $paths_workdir/program_error.log | grep -c -i 'error'`))
 
 	if [ $ret_val != "0" ]; then
 		debug "FAIL.\n"

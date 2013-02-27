@@ -21,7 +21,7 @@ erase () {
 
       COMMAND="$paths_msp430gdb --batch"
   		COMMAND="$COMMAND -ex \"target remote localhost:2000\""
-  	  COMMAND="$COMMAND -ex \"erase all \""
+  	  COMMAND="$COMMAND -ex \"erase all\""
   	  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
   	  COMMAND="$COMMAND 2>$paths_workdir/erase_error.log"
   
@@ -38,6 +38,28 @@ erase () {
   		return 0
       ;;
     main)
+  		debug -d "erase : Erase MAIN target memory ... "
+  
+  		echo "---------- ERASE SHOT ON DATE `date +"%b %d %H:%M:%S"` ----------"\
+  		  >>$paths_workdir/command_shots.log
+
+      COMMAND="$paths_msp430gdb --batch"
+  		COMMAND="$COMMAND -ex \"target remote localhost:2000\""
+  	  COMMAND="$COMMAND -ex \"erase \""
+  	  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
+  	  COMMAND="$COMMAND 2>$paths_workdir/erase_error.log"
+  
+      echo $COMMAND>>$paths_workdir/command_shots.log
+      
+      eval $COMMAND
+      
+  		local status=$?
+  		if [ $status != "0" ]; then
+  			debug "FAIL\n"
+  			return 1
+  		fi
+  		debug "OK\n"
+  		return 0
       ;;
     segment)
 # TOOOOOOOOOOOOOOOOOOOOOODOOOOOOOOOOOOOOOOOOOOOOO

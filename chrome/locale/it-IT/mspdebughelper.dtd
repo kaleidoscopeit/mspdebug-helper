@@ -41,6 +41,7 @@
 
 <!ENTITY toolkit.pane.commands.label	           "Comandi">
 <!ENTITY toolkit.pane.program.label		           "Programma">
+<!ENTITY toolkit.pane.mdump.label		             "Leggi mem.">
 
 <!ENTITY toolkit.program.label    		           "Procedura automatizzata di caricamento firmware">
 <!ENTITY toolkit.program.firmware.label          "Firmware : ">
@@ -61,3 +62,12 @@
 <!ENTITY toolkit.program.do.erase                "Cancella">
 <!ENTITY toolkit.program.do.prog                 "Programma">
 <!ENTITY toolkit.program.do.ver                  "Verifica">
+
+<!ENTITY toolkit.dump_mem.label    		           "Strumento per la lettura e salvataggio della memoria">
+<!ENTITY toolkit.dump_mem.type.label             "Leggere :">
+<!ENTITY toolkit.dump_mem.type.all               "Tutta la memoria (ALL)">
+<!ENTITY toolkit.dump_mem.type.main              "Solo la memoria programma (MAIN)">
+<!ENTITY toolkit.dump_mem.type.info              "Solo la memoria dati (INFO)">
+
+<!ENTITY toolkit.dump_mem.do.label               "Esegui : ">
+<!ENTITY toolkit.dump_mem.do.read                "Leggi memoria">

@@ -13,7 +13,7 @@
   <tabpanel id="PanelProgram">
   <vbox flex="1">
     <hbox>
-      <groupbox flex="2">
+      <groupbox flex="3">
         <caption label="&toolkit.program.label;"/>    
         <grid>
           <columns>
@@ -27,7 +27,7 @@
               <label value="&toolkit.program.firmware.label;"/>
               <textbox id="hexfile"
                        title="&toolkit.program.firmware.title;"/>
-              <button oncommand="mspdebughelper.file_picker(document.getElementById('hexfile'));"
+              <button oncommand="mspdebughelper.f_picker(document.getElementById('hexfile'));"
                       label="&toolkit.program.choose.label;"
                       accesskey="&toolkit.program.choose.accesskey;"/>
             </row>
@@ -35,7 +35,6 @@
               <label value="&toolkit.program.target.label;"/>
           		<menulist id="target">
           			<menupopup id="target_list">
-          				<menuitem value="null" label="&toolkit.program.target.null;"/>
           				<menuitem value="auto" label="&toolkit.program.target.auto;"/>
             		</menupopup>
           		</menulist>
@@ -65,25 +64,33 @@
             <column flex="1"/>
           </columns>
           <rows>
-            <row height="40" style="border-bottom:1px solid red;">
-              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png" maxheight="24" maxwidth="24"/>
+            <row style="margin-bottom:5px">
+              <image id="status_ico_epv"
+                     src="chrome://mspdebughelper/skin/icons/ok.png"/>
               <button oncommand="toolkit.epv.start();"
-                      label="&toolkit.program.do.epv;" style="height:30px"/>
+                      label="&toolkit.program.do.epv;"
+                      style="margin:-1px 0 -1px 5px"/>
             </row>
-            <row>  
-              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png"/>   
+            <row style="margin-bottom:5px">
+              <image id="status_ico_erase"
+                     src="chrome://mspdebughelper/skin/icons/ok.png"/>   
               <button oncommand="toolkit.erase.start();"
-                      label="&toolkit.program.do.erase;"/>
+                      label="&toolkit.program.do.erase;"
+                      style="margin:-1px 0 -1px 5px"/>
             </row>
-            <row>     
-              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png"/>
+            <row style="margin-bottom:5px">
+              <image id="status_ico_prog"
+                      src="chrome://mspdebughelper/skin/icons/ok.png"/>
               <button oncommand="toolkit.prog.start();"
-                      label="&toolkit.program.do.prog;"/>
+                      label="&toolkit.program.do.prog;"
+                      style="margin:-1px 0 -1px 5px"/>
             </row>
-            <row>
-              <image id="prog.epv.image" src="chrome://mspdebughelper/skin/icons/ok.png" />
+            <row style="margin-bottom:0px">
+              <image id="status_ico_ver"
+                     src="chrome://mspdebughelper/skin/icons/ok.png" />
               <button oncommand="toolkit.ver.start();"
-                      label="&toolkit.program.do.ver;"/>
+                      label="&toolkit.program.do.ver;"
+                      style="margin:-1px 0 -1px 5px"/>
             </row>
           </rows>
         </grid> 

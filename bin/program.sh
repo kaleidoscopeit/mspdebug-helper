@@ -1,70 +1,5 @@
 #!/bin/bash
 
-
-# ===============================================================================
-# Copy or download the firmware file locally when a debug session is open
-# ===============================================================================
-
-select_firmware () {
-	local size
-	local ret_val
-
-	# Check session status
-	check_debug_session
-	ret_val=$?
-
-	if [ "$ret_val" -ne "0" ]; then
-		debug -d "select_firmware : session check failed.\n"
-		return 3;
-	fi
-
-	# Remove any previous downloaded firmware file
-	debug -d "select_firmware : remove any previous firmware cache ... "
-	rm -f $paths_workdir/firmware.hex
-	rm -f $paths_workdir/firmware.conf
-
-	if [ -s $paths_workdir/firmware.hex ] ; then
-		debug "FAIL\n"
-		# ------ EXIT CODE ------ #
-		return 5
-	else
-		debug "OK\n"
-	fi
-
-	# Detect the file origin (local or remote)
-	if [ `echo "${argv[0]}" | grep -c 'http:\/\/'` = 1 ]; then
-		debug -d "select_firmware : Download firmware file into fimware.hex (${argv[0]}) ... " 
-		wget --output-document=$paths_workdir/firmware.hex ${argv[0]} 1>$paths_workdir/wget.log 2>$paths_workdir/wget.log
-		BASENAME=`basename "${argv[0]}"`
-	else
-		debug -d "select_firmware : Copy firmware file into fimware.hex ... "
-		cp "${argv[0]}" "$paths_workdir/firmware.hex"
-		BASENAME=`basename "$(readlink -f "${argv[0]}")"`
-	fi
-
-	if [ -s $paths_workdir/firmware.hex ] ; then
-		debug "OK\n"
-		# count the size of the firmware file
-		while read line; do
-			size=$(( size+0x${line:1:2} ))
-		done < $paths_workdir/firmware.hex
-
-		# write firmware data
-		echo `dirname "${argv[0]}"`"	$BASENAME	"`md5sum $paths_workdir/firmware.hex | cut -f1 -d' '`"	"$size>$paths_workdir/firmware.conf
-
-		# ------ EXIT CODE ------ #
-		return 0
-	else
-		debug "FAIL\n"
-		# ------ EXIT CODE ------ #
-		return 4
-	fi
-
-	# ------ EXIT POINT------ unmanaged error #
-	return 1
-}
-
-
 # ===============================================================================
 # Program monitor
 # ===============================================================================
@@ -146,89 +81,6 @@ verify_monitor () {
 }
 
 # ===============================================================================
-# Writes a string in a specified memory address
-# ===============================================================================
-
-write_string () {
-	local SWITCH
-	local ADDRESS
-	local VALUE
-	local BATCH
-
-	mkdir $paths_workdir/ws_buffer
-
-	# Find for any already started session
-	check_debug_session
-	local ret_val=$?
-
-	if [ "$ret_val" -ne "0" ]; then
-		debug -d "write_string : session check failed.\n"
-		# ------ EXIT CODE ------ #
-		return 3;
-	fi
-
-	# At least one pair address/string has to be given
-	if [ -z "${argv[0]}" ]; then
-		debug -d "write_string : Wrong parameter passed to function.\n"
-		return 4
-	fi
-
-	# initialize batch files
-	echo "target remote localhost:2000">$paths_workdir/gdb.batch
-	echo >$paths_workdir/gdb.batch.erase
-	echo >$paths_workdir/gdb.batch.mw
-	echo >$paths_workdir/gdb.batch.dump
-
-	debug -d "write_string : Making batch...\n"
-
-	# Parse the given address/string pairs and creates 3 array with : start adress, string data, occupied memory size
-	for (( i = 0 ; i < ${#argv[@]} ; i++ )); do
-		ADDRESS[$i]=`echo ${argv[$i]} | cut -f1 -d' '`
-		DATA[$i]=`echo ${argv[$i]} | cut -f2 -d' '`
-		SIZE[$i]=`echo -n ${DATA[$i]} | wc -m`
-		debug -d "write_string : Address->${ADDRESS[$i]},Data->'${DATA[$i]}',Size->${SIZE[$i]}\n"
-
-		# Convert passed value to an exadecimal blob
-		DATA_HEX[$i]="`echo -n ${DATA[$i]} | od -A n -t x1 |sed 's/^ //g'`"
-
-		# compose batch file
-		echo "monitor erase segment ${ADDRESS[$i]} ${SIZE[$i]}">>$paths_workdir/gdb.batch.erase
-		echo "monitor mw ${ADDRESS[$i]} ${DATA_HEX[$i]}">>$paths_workdir/gdb.batch.mw
-		echo "dump bin memory $paths_workdir/ws_buffer/${ADDRESS[$i]}.bin ${ADDRESS[$i]} `printf '0x%x\n' $(( ${ADDRESS[$i]}+${SIZE[$i]} ))`">>$paths_workdir/gdb.batch.dump
-	done
-
-	cat $paths_workdir/gdb.batch.erase $paths_workdir/gdb.batch.mw $paths_workdir/gdb.batch.dump >> $paths_workdir/gdb.batch
-
-	debug -d "write_string : write data ... "
-	echo "---------- WRITE STRING ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_workdir/command_shots.log
-	./msp430-gdb --batch -x $paths_workdir/gdb.batch >>$paths_workdir/command_shots.log 2>$paths_workdir/write_string_error.log
-
-	local status=$?
-
-	if [ $status != "0" ]; then
-		debug "FAIL\n"
-		debug -d "write_string : msp430-gdb command failed.\n"
-		return 5
-	fi
-
-	debug "OK\n"
-
-	for (( i = 0 ; i < ${#ADDRESS[@]} ; i++ )); do
-		debug -d "write_string : verify data for address : ${ADDRESS[$i]} ... "
-		if [ "`cat $paths_workdir/ws_buffer/${ADDRESS[$i]}.bin`" == "${DATA[$i]}" ];then
-			debug "OK\n"
-			return 0
-		else
-			debug "FAIL\n"
-			debug -d "write_string : operation failed.\n"
-			return 5
-		fi
-	done
-
-	return 1
-}
-
-# ===============================================================================
 # Debug messages helper
 # ===============================================================================
 
@@ -281,6 +133,7 @@ cd "$SCRIPTDIR"
 source settings
 source find_device.sh
 source select_target.sh
+source select_firmware.sh
 source open_debug_session.sh
 source close_debug_session.sh
 source check_debug_session.sh
@@ -289,6 +142,8 @@ source get_supported_targets.sh
 source erase.sh
 source do_program.sh
 source verify.sh
+source write_string.sh
+source memory_dump.sh
 
 # Builds the workdir structure
 mkdir -p $paths_workdir/save
@@ -341,6 +196,9 @@ case "$COMMAND" in
 	write_string)
 		write_string
 		;;
+	memory_dump)
+		memory_dump $argv
+		;;		
 	*)
 		debug -d "program : command not recognized ($COMMAND)\n"
 		echo  "program : command not recognized ($COMMAND)"

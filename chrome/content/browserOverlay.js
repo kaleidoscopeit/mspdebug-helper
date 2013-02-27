@@ -60,6 +60,7 @@ mspdebughelper = {
       .getElementById("mspdebughelper_bundlePreferences");
   },
 
+
 /*****************************************************************************
  * Shows about window
  *****************************************************************************/
@@ -69,6 +70,7 @@ mspdebughelper = {
       "mspdebughelper-about-window", "chrome,modal,centerscreen,dialog");
   },
 
+
 /*****************************************************************************
  * Shows console window
  *****************************************************************************/
@@ -77,6 +79,7 @@ mspdebughelper = {
     window.open("chrome://mspdebughelper/content/console/main.xul",
       "mspdebughelper-console-window", "chrome,centerscreen");
   },
+
 
 /*****************************************************************************
  * Shows settings window
@@ -98,6 +101,7 @@ mspdebughelper = {
     this._preferencesWindow.focus();
   },
 
+
 /*****************************************************************************
  * Shows toolkit window
  *****************************************************************************/
@@ -107,13 +111,14 @@ mspdebughelper = {
       "mspdebughelper-toolkit-window", "chrome,centerscreen");
   },
 
-  /**
-   * Call programming functions 
-   */
+
+/*****************************************************************************
+ * Call programming functions 
+ *****************************************************************************/
   callCommand: function(commandName, data, callback)
   {
     // some checks
-    if (!this.getWorkdir()) {
+    if (!this.get_workdir()) {
       alert(this._bundlePreferences.getString("not_valid_workdir"));
       return false;
     }
@@ -162,12 +167,16 @@ mspdebughelper = {
     });
   },
 
+
+/*****************************************************************************
+ * Upgrade settings file in /bin
+ *****************************************************************************/
   upgradeSettingsFile: function()
   {
     // some checks
-    let workDir = this.getWorkdir();
+    let workDir = this.get_workdir();
 
-    if (!this.getWorkdir()) {
+    if (!this.get_workdir()) {
       alert(this._bundlePreferences.getString("not_valid_workdir"));
       return false;
     }
@@ -205,16 +214,18 @@ mspdebughelper = {
     return true;
   },
 
-  /**
-   * Enables monitoring functions
-   */
+
+/*****************************************************************************
+ * Enables monitoring functions
+ *****************************************************************************/
   setupMonitor: function()
   {
   },
 
-  /**
-   * Handle messages between the plugin code and the untrusted remote code
-   */
+
+/*****************************************************************************
+ * Handle messages between the plugin code and the untrusted remote code
+ *****************************************************************************/
   rpcListener: function(event)
   {
     var node = event.target;
@@ -232,10 +243,11 @@ mspdebughelper = {
     });
   },
 
-  /**
-   * Checks if the workdir has been defined and returs it's path
-   */
-  getWorkdir: function()
+
+/*****************************************************************************
+ * Checks if the workdir has been defined and returs it's path
+ *****************************************************************************/
+  get_workdir: function()
   {
     let workdir = this._prefService
       .getComplexValue("paths_workdir"
@@ -243,18 +255,17 @@ mspdebughelper = {
 
     if (workdir == null | workdir == '') return false;
 
-    let commandInstance = Components.classes["@mozilla.org/file/local;1"]
-          .createInstance(Components.interfaces.nsILocalFile);
+    let file = this.get_file_instance(workdir, true, true);
 
-    commandInstance.initWithPath(workdir);
+    if (file)    
 
-    if (commandInstance.isDirectory() 
-        & commandInstance.isReadable()
-        & commandInstance.isWritable())
       return workdir;
+
     else
+
       return false
   },
+
 
 /*****************************************************************************
  * Checks if the MSPDebug executable has been defined and returs it's path
@@ -312,16 +323,16 @@ mspdebughelper = {
     return false;
   },
 
+/*****************************************************************************
+ * Read one of the debug files
+ *****************************************************************************/
   read: function(target, param = null)
   {
-    let workDir = this.getWorkdir();
-
+    let workDir = this.get_workdir();
+    let path;
+    
     if (!workDir) {
-      alert(gBrowser
-            .mspdebughelper
-            ._bundlePreferences
-            .getString("notValidWorkdir"));
-            
+      alert(this._bundlePreferences.getString("not_valid_workdir"));           
       return false;
     }
 
@@ -329,6 +340,7 @@ mspdebughelper = {
       case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
       case 'main' :      path = workDir + "/main.log";               break;      
       case 'gdb' :       path = workDir + "/gdb.log";                break;
+      default :          path = workDir + target;                    break;
     }
 
 
@@ -360,7 +372,10 @@ mspdebughelper = {
     return data;
   },
 
-  get_file_instance: function(path,x=false)
+/*****************************************************************************
+ * File instance helper
+ *****************************************************************************/
+  get_file_instance: function(path,x=false,d=false)
   {
     var file = Components.classes["@mozilla.org/file/local;1"]
               .createInstance(Components.interfaces.nsILocalFile);
@@ -373,14 +388,21 @@ mspdebughelper = {
         
       return false;     
     }
- 
-    if(!file.isFile()) {
+
+    if(!d & !file.isFile()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_a_file",[path]));
         
       return false;     
     }
 
+    if(d & !file.isDirectory()) {
+      Application.console.log("mspdebughelper : " + this._bundlePreferences
+        .getFormattedString("not_a_directory",[path]));
+        
+      return false;     
+    }
+ 
     if(!file.isReadable()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_readable_file",[path]));
@@ -397,8 +419,11 @@ mspdebughelper = {
      
     return file;    
   },
-  
-  file_picker: function(target)  
+
+/*****************************************************************************
+ * File picker helper
+ *****************************************************************************/  
+  f_picker: function(target)  
   {  
     const nsIFilePicker = Components.interfaces.nsIFilePicker;  
     const nsILocalFile  = Components.interfaces.nsILocalFile;  
