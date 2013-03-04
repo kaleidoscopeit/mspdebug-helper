@@ -52,6 +52,23 @@ memory_dump () {
       ;;
 
     segment)
+  		debug -d "memory_dump : Dump SEGMENTED target memory ... "
+
+      local START=$(echo "$2" | grep "0x[0-9 A-F].")
+      local END=$(echo "$3" | grep "0x[0-9 A-F].")
+      local TARGET_FILE=$paths_workdir"/dump_memory/"$START".hex"
+      
+      if [ -z $START || -z $END ]; then
+    		debug -d "memory_dump : Dump range not valid (from $2 to $3)\n"
+        echo     "memory_dump : Dump range not valid (from $2 to $3)"
+        return 255
+      fi
+      
+      COMMAND="$paths_msp430gdb --batch"
+  		COMMAND="$COMMAND -ex \"target remote localhost:2000\""
+  	  COMMAND="$COMMAND -ex \"dump ihex memory $TARGET_FILE $START $END\""
+  	  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
+  	  COMMAND="$COMMAND 2>$paths_workdir/dump_memory_error.log"
     	;;
 
     *)

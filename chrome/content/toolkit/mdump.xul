@@ -25,7 +25,7 @@
             <separator />
             <row align="center">
               <label value="&toolkit.dump_mem.type.label;"/>
-          		<menulist id="dump_type">
+          		<menulist id="dump_type" oncommand="toolkit.enable_range_fields();">
           			<menupopup>
           				<menuitem value="all"
           				          label="&toolkit.dump_mem.type.all;"/>
@@ -33,10 +33,19 @@
           				          label="&toolkit.dump_mem.type.main;"/>
           				<menuitem value="info"
           				          label="&toolkit.dump_mem.type.info;"/>
+          				<menuitem value="segment"
+          				          label="&toolkit.dump_mem.type.segment;"/>
           			</menupopup>
           		</menulist>
             </row>
-
+            <row align="center">
+              <label value="&toolkit.dump_mem.segment.label;"/>
+              <hlay align="center" flex="1">
+                <textbox id="segmfrom" flex="1" disabled="true"/>
+                <label value="&toolkit.dump_mem.segment.label2;"/>
+                <textbox id="segmto" flex="1" disabled="true"/>
+              </hlay>
+            </row>
           </rows>
         </grid>
       </groupbox>

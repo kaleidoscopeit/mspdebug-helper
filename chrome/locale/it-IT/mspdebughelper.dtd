@@ -68,6 +68,10 @@
 <!ENTITY toolkit.dump_mem.type.all               "Tutta la memoria (ALL)">
 <!ENTITY toolkit.dump_mem.type.main              "Solo la memoria programma (MAIN)">
 <!ENTITY toolkit.dump_mem.type.info              "Solo la memoria dati (INFO)">
+<!ENTITY toolkit.dump_mem.type.segment           "Una porzione di memoria (SEGMENT)">
+
+<!ENTITY toolkit.dump_mem.segment.label          "Range da :">
+<!ENTITY toolkit.dump_mem.segment.label2         "a :">
 
 <!ENTITY toolkit.dump_mem.do.label               "Esegui : ">
 <!ENTITY toolkit.dump_mem.do.read                "Leggi memoria">

@@ -100,6 +100,17 @@ var toolkit = {
     target_console.selectionStart = pos;
     target_console.selectionEnd = pos;
   },
+  
+  enable_range_fields: function(){
+    let dump_type = document.getElementById('dump_type');
+    let segmfrom  = document.getElementById('segmfrom');
+    let segmto    = document.getElementById('segmto');
+    
+    if(dump_type.value == "segment")
+      segmfrom.disabled = segmto.disabled = false;
+    else 
+      segmfrom.disabled = segmto.disabled = true;
+  }
 };
 
 /*******************************************************************
