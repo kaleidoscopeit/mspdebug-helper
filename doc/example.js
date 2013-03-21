@@ -7,8 +7,9 @@ program_device={
 		this.call_batch();
 	},
 		
-	// Every function is asynchronous and for each one have to define a callback function handler
-	// This is the way I prefer because it's possible to create a good clean stack
+	/* Every function is asynchronous and for each one have to define a 
+	 * callback function handler. This is the way I prefer because it's 
+	 * possible to create a good clean stack*/
 
 	batch:Array(
 		// ---- CLOSE PREVIOUS SESSION ---- //
@@ -16,12 +17,12 @@ program_device={
 			mspprogrammer.close_debug_session(function(data){
 				// call next batch event
 				program_device.call_batch();
-			})
+			});
 		},
 
 		// ---- SELECT TARGET ---- //	
 		function(){
-			mspprogrammer.select_target([TARGET NAME],function(data){
+			mspprogrammer.select_target([TARGET_NAME],function(data){
 				switch(data.result){
 					// All done
 					case 0:
@@ -29,10 +30,10 @@ program_device={
 						break;
 
 					// unhandled error
-					default
+					default :
 						throw('unhandled error');
 				}
-			})
+			});
 		},
 			
 		// ---- OPEN NEW SESSION ---- //
@@ -46,7 +47,7 @@ program_device={
 
 					// access to the debug tool denied
 					case 5:
-						throw('access to the debug tool denied')
+						throw('access to the debug tool denied');
 						break;
 
 					// target not found
@@ -63,12 +64,12 @@ program_device={
 					default:
 						throw('unhandled error');
 				}
-			})
+			});
 		},
 
 		// ---- SELECT FIRMWARE ---- //
 		function(){
-			mspprogrammer.select_firmware([FIRMWARE URL OR LOCATION],function(data){
+			mspprogrammer.select_firmware([FIRMWARE_URL_OR_LOCATION],function(data){
 				switch(data.result){
 					// firmware file download error
 					case 4:
@@ -84,7 +85,7 @@ program_device={
 					default:
 						throw('unhandled error');
 				}
-			})
+			});
 		},
 
 		// ---- ERASE ALL ---- //
@@ -100,7 +101,7 @@ program_device={
 					default:
 						throw('unhandled error');
 				 }							
-			})
+			});
 		},
 			
 		// ---- PROGRAM TARGET ---- //
@@ -123,7 +124,7 @@ program_device={
 					default:
 						throw('unhandled error');	
 				}
-			})
+			});
 		},
 			
 		// ---- VERIFY TARGET ---- //
@@ -155,7 +156,7 @@ program_device={
 					default:
 						throw('unhandled error');
 				}
-			})
+			});
 		}	
 	),
 

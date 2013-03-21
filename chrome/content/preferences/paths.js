@@ -21,8 +21,7 @@ var panePaths = {
    * Displays a file picker in which the user can choose the location where
    * a file is placed.
    */
-  chooseFilePath: function (elem)
-  {
+  chooseFilePath: function (elem) {
     const nsIFilePicker = Components.interfaces.nsIFilePicker;
     const nsILocalFile = Components.interfaces.nsILocalFile;
 
@@ -48,15 +47,14 @@ var panePaths = {
     if (fp.show() == nsIFilePicker.returnOK) {
       var file = fp.file.QueryInterface(nsILocalFile);
 			elem.value = fp.file.path;
-    }
+    };
   },
 
   /**
    * Displays a file picker in which the user can choose the location where
    * a directory is placed.
    */
-  chooseDirectoryPath: function (elem)
-  {
+  chooseDirectoryPath: function (elem) {
     const nsIFilePicker = Components.interfaces.nsIFilePicker;
     const nsILocalFile = Components.interfaces.nsILocalFile;
 
@@ -85,14 +83,13 @@ var panePaths = {
     }
   },
 
-  displayPath: function (elem)
-  {
+  displayPath: function(elem) {
 
 		var preferenceName = elem.getAttribute("preference");
 		var preference = document.getElementById(preferenceName);
 
-		if (preference.value === null) return ""
+		if (preference.value === null) return "";
 		else return preference.value.path;
-	}
+  }
 };
 

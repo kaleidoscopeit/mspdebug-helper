@@ -3,33 +3,36 @@
 # ===============================================================================
 
 open_debug_session () {
-  # local variables declaration
-  local DEVICE
-  local MSPDEBUG_PID
-  local COUNTER=0
-  local paths_libmsp430=`dirname "$paths_libmsp430"`
+	# local variables declaration
+	local DEVICE
+	local MSPDEBUG_PID
+	local COUNTER=0
+	local paths_libmsp430=`dirname "$paths_libmsp430"`
 
-  check_debug_session
-  local ret_val=$?
+	check_debug_session
+	local ret_val=$?
 
-  if [ "$ret_val" -eq "0" ] ; then
-    # ------ EXIT POINT------ debug session already started #
-    debug -d "open_debug_session : Session already started.\n"
+	if [ "$ret_val" -eq "0" ] ;
+	then
+		# ------ EXIT POINT------ debug session already started #
+		debug -d "open_debug_session : Session already started.\n"
     return 3;
 
-  elif [ "$ret_val" -ne "1" ] ; then
-    # ------ EXIT POINT------ debug session already started #
-    debug -d "open_debug_session : Foreing session already started. Try to kill\n"
-    close_debug_session
-  fi
+  elif [ "$ret_val" -ne "1" ] ;
+  then
+		# ------ EXIT POINT------ debug session already started #
+		debug -d "open_debug_session : Foreing session already started. Try to kill\n"
+		close_debug_session
+	fi
 
-  # Find if a debug tool exists depending by the given driver
-  DEVICE=`find_device $driver`
+	# Find if a debug tool exists depending by the given driver
+	DEVICE=`find_device $driver`
 
-  if [ -z "$DEVICE" ]; then
-    debug -d "open_debug_session : Cannot find a debug tool.\n"
-    return 4
-  fi
+	if [ -z "$DEVICE" ];
+	then
+		debug -d "open_debug_session : Cannot find a debug tool.\n"
+		return 4
+	fi
 
   if [ ! -w "$DEVICE" ]; then
     debug -d "open_debug_session : Write access denied to the debug tool. ($DEVICE)\n"
@@ -58,32 +61,37 @@ open_debug_session () {
 
   # Waits 5 second for the opening of gdb listening port (2000)
   debug -d "open_debug_session : Wait for gdb-proxy start... "
-  while [ $COUNTER -lt 5 ]; do
-    if [ ! -z "`tail -n1 $paths_workdir/gdb.log | grep 'Bound to port'`" ]; then
+  while [ $COUNTER -lt 10 ];
+  do
+    if [ ! -z "`tail -n1 $paths_workdir/gdb.log | grep 'Bound to port'`" ];
+    then
       debug "OK\n"
 
-      # If a specific target was selected do checks
-      if [ -e $paths_workdir/target.conf ]; then
-        local TARGET=`cat $paths_workdir/target.conf`
-        if [ -z "`grep "$TARGET" $paths_workdir/gdb.log`" -a $TARGET -ne "auto" ]; then
-          debug -d "open_debug_session : Specified target (`cat $paths_workdir/target.conf`) not found.\n"
-          
-          close_debug_session
-          
-          debug " OK\n"
-          # ------ EXIT POINT------ target not found #
-          return 6
-        fi
-      fi
+			# If a specific target was selected do checks
+			if [ -e $paths_workdir/target.conf ];
+			then
+				local TARGET=`cat $paths_workdir/target.conf`
+				if [ -z "`grep $TARGET $paths_workdir/gdb.log`" -a "$TARGET" != "auto" ];
+				then
+					debug -d "open_debug_session : Specified target (`cat $paths_workdir/target.conf`) not found.\n"
 
-      # ------ EXIT POINT------ debug proxy started #
-      return 0
-    else
-      sleep 1
-      (( COUNTER++ ))
-      debug $COUNTER' '
-    fi
-  done
+					close_debug_session
+					
+					debug " OK\n"
+					
+					# ------ EXIT POINT------ target not found #
+					return 6
+				fi
+			fi
+
+			# ------ EXIT POINT------ debug proxy started #
+			return 0
+		else
+			sleep 1
+			(( COUNTER++ ))
+			debug $COUNTER' '
+		fi
+	done
 
 
   # ------ EXIT POINT------ debug proxy failed #

@@ -53,7 +53,7 @@ mspdebughelper = {
         mspdebughelper.addonLocation = addon.getResourceURI("")
           .QueryInterface(Components.interfaces.nsIFileURL).file.path;
       }
-    )
+    );
 
     // Setup locale file reference
     this._bundlePreferences = document
@@ -138,7 +138,7 @@ mspdebughelper = {
     this.commandIsRunning = true;
 
     // hooks main process
-    let commandPath     = this.addonLocation + "/bin/program.sh"
+    let commandPath     = this.addonLocation + "/bin/program.sh";
     let commandInstance = this.get_file_instance(commandPath, true);
 
     if (!commandInstance) {
@@ -162,7 +162,7 @@ mspdebughelper = {
             .QueryInterface(Components.interfaces.nsIProcess);
           callback({result:processInstance.exitValue});
 
-        } 
+        };
       }
     });
   },
@@ -263,7 +263,7 @@ mspdebughelper = {
 
     else
 
-      return false
+      return false;
   },
 
 
@@ -290,7 +290,7 @@ mspdebughelper = {
     Application.console.log("mspdebughelper : " + this._bundlePreferences
       .getFormattedString("not_valid_mspdebug",[mspdebug]));
       
-    return false
+    return false;
   },
 
 /*****************************************************************************
@@ -326,8 +326,7 @@ mspdebughelper = {
 /*****************************************************************************
  * Read one of the debug files
  *****************************************************************************/
-  read: function(target, param = null)
-  {
+  read: function(target, param = null) {
     let workDir = this.get_workdir();
     let path;
     

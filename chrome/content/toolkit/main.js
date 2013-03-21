@@ -32,14 +32,14 @@ var toolkit = {
       prog  : document.getElementById('status_ico_prog'),
       ver   : document.getElementById('status_ico_ver'),
       mdump : document.getElementById('status_ico_mdump')
-    }
+    };
  
     // status icons url's
     this.icon = {
       ok    : "chrome://mspdebughelper/skin/icons/ok.png",
       wait  : "chrome://mspdebughelper/skin/icons/wait.png",
       error : "chrome://mspdebughelper/skin/icons/error.png"
-    }
+    };
  
 
   },
@@ -77,7 +77,7 @@ var toolkit = {
         let new_item = document.createElement("menuitem");
         toolkit.target_list.appendChild(new_item);
         new_item.value = new_item.label = toolkit.fet_target.olimex[i];
-     }
+     };
     });
   },
 
@@ -92,7 +92,7 @@ var toolkit = {
   },
 
   fill_dump_console: function(target)
-  {
+  {	  
     let data = mspdebughelper.read("/dump_memory/" + target + ".hex");
     let target_console = document.getElementById("dumpConsole");
     target_console.value = data;
@@ -145,7 +145,7 @@ toolkit.epv = {
       mspdebughelper.callCommand('close_debug_session', [], function(data){
         // call next batch event
         toolkit.epv.call_batch();
-      })
+      });
     },
     
     // ---- CLEAN PREVIOUS SESSION ---- //
@@ -153,7 +153,7 @@ toolkit.epv = {
       mspdebughelper.callCommand('clean_debug_session', [], function(data){
         // call next batch event
         toolkit.epv.call_batch();
-      })
+      });
     },
     
     // ---- SELECT TARGET ---- //  
@@ -169,7 +169,7 @@ toolkit.epv = {
           default :
             toolkit.epv.except('select_target: unhandled exception');
         }
-      })
+      });
     },
       
     // ---- OPEN NEW SESSION ---- //
@@ -183,7 +183,7 @@ toolkit.epv = {
 
           // access to the debug tool denied
           case 5:
-            toolkit.epv.except('open_debug_session: access to the debug tool denied')
+            toolkit.epv.except('open_debug_session: access to the debug tool denied');
             break;
 
           // target not found
@@ -200,7 +200,7 @@ toolkit.epv = {
           default :
             toolkit.epv.except('open_debug_session: unhandled exception');
         }
-      })
+      });
     },
 
     // ---- SELECT FIRMWARE ---- //
@@ -221,7 +221,7 @@ toolkit.epv = {
           default:
             toolkit.epv.except('select_firmware: unhandled exception');
         }
-      })
+      });
     },
 
     // ---- ERASE ALL ---- //
@@ -238,7 +238,7 @@ toolkit.epv = {
           default :
             toolkit.epv.except('erase: unhandled exception');
          }              
-      })
+      });
     },
       
     // ---- PROGRAM TARGET ---- //
@@ -260,7 +260,7 @@ toolkit.epv = {
           default :
             toolkit.epv.except('program: unhandled exception');  
         }
-      })
+      });
     },
       
     // ---- VERIFY TARGET ---- //
@@ -292,7 +292,7 @@ toolkit.epv = {
           default:
             toolkit.epv.except('verify: unhandled exception');
         }
-      })
+      });
     },
  
     // ---- CLOSE SESSION ---- //
@@ -302,17 +302,16 @@ toolkit.epv = {
         toolkit.status_icons.epv.src = toolkit.icon.ok;
         clearInterval(toolkit.pmon);
         toolkit.fill_console('main');
-      })
-    }    
+      });
+    }
   ),
 
-  call_batch:function(){
+  call_batch:function() {
     this.batch[this.batch_count]();
     this.batch_count++;
   },
 
-  except:function(arg)
-  {
+  except:function(arg) {
     if(toolkit.status_icons.erase.src == toolkit.icon.wait )
       toolkit.status_icons.erase.src = toolkit.icon.error;
 
@@ -354,7 +353,7 @@ toolkit.mdump = {
       mspdebughelper.callCommand('close_debug_session', [], function(data){
         // call next batch event
         toolkit.mdump.call_batch();
-      })
+      });
     },
     
     // ---- CLEAN PREVIOUS SESSION ---- //
@@ -362,7 +361,7 @@ toolkit.mdump = {
       mspdebughelper.callCommand('clean_debug_session', [], function(data){
         // call next batch event
         toolkit.mdump.call_batch();
-      })
+      });
     },
 
     // ---- SELECT TARGET ---- //  
@@ -378,7 +377,7 @@ toolkit.mdump = {
           default :
             toolkit.mdump.except('select_target: unhandled exception');
         }
-      })
+      });
     },
         
     // ---- OPEN NEW SESSION ---- //
@@ -392,7 +391,7 @@ toolkit.mdump = {
 
           // access to the debug tool denied
           case 5:
-            toolkit.mdump.except('open_debug_session: access to the debug tool denied')
+            toolkit.mdump.except('open_debug_session: access to the debug tool denied');
             break;
 
           // target not found
@@ -409,7 +408,7 @@ toolkit.mdump = {
           default :
             toolkit.mdump.except('open_debug_session: unhandled exception');
         }
-      })
+      });
     },
 
      
@@ -443,7 +442,7 @@ toolkit.mdump = {
           default:
             toolkit.mdump.except('memory_dump: unhandled exception');
         }
-      })
+      });
     },
  
     // ---- CLOSE SESSION ---- //
@@ -460,20 +459,19 @@ toolkit.mdump = {
             
         }
         toolkit.fill_dump_console(target);
-      })
-    }    
+      });
+    }
   ),
 
-  call_batch:function(){
+  call_batch:function() {
     this.batch[this.batch_count]();
     this.batch_count++;
   },
 
-  except:function(arg)
-  {
+  except:function(arg) {
     toolkit.status_icons.mdump.src = toolkit.icon.error;
     clearInterval(toolkit.pmon);
     toolkit.fill_console('main');        
     throw(arg);
   }
-}
+};

@@ -1,3 +1,5 @@
+#/bin/bash
+
 # ===============================================================================
 # Writes a string in a specified memory address
 # ===============================================================================
@@ -8,7 +10,7 @@ write_string () {
 	local VALUE
 	local BATCH
 
-	mkdir $paths_workdir/ws_buffer
+	mkdir $paths_workdir/ws_buffer >/dev/null
 
 	# Find for any already started session
 	check_debug_session
@@ -53,8 +55,17 @@ write_string () {
 	cat $paths_workdir/gdb.batch.erase $paths_workdir/gdb.batch.mw $paths_workdir/gdb.batch.dump >> $paths_workdir/gdb.batch
 
 	debug -d "write_string : write data ... "
+	
 	echo "---------- WRITE STRING ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_workdir/command_shots.log
-	./msp430-gdb --batch -x $paths_workdir/gdb.batch >>$paths_workdir/command_shots.log 2>$paths_workdir/write_string_error.log
+
+  COMMAND="$paths_msp430gdb --batch"
+	COMMAND="$COMMAND -x $paths_workdir/gdb.batch"
+  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
+  COMMAND="$COMMAND 2>$paths_workdir/write_string_error.log"
+
+  echo $COMMAND>>$paths_workdir/command_shots.log
+  
+  eval $COMMAND
 
 	local status=$?
 
@@ -70,7 +81,6 @@ write_string () {
 		debug -d "write_string : verify data for address : ${ADDRESS[$i]} ... "
 		if [ "`cat $paths_workdir/ws_buffer/${ADDRESS[$i]}.bin`" == "${DATA[$i]}" ];then
 			debug "OK\n"
-			return 0
 		else
 			debug "FAIL\n"
 			debug -d "write_string : operation failed.\n"

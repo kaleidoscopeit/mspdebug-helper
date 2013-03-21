@@ -1,4 +1,4 @@
-paths_libmsp430=/home/MICROJET.LAN/gabriele.rossetti/Scrivania/Documenti/MSPDebugHelper_refusees/bin/libmsp430.so
+paths_libmsp430=
 paths_mspdebug=/home/MICROJET.LAN/gabriele.rossetti/Documenti/Programmazione/mspdebug/mspdebug
 paths_workdir=/home/MICROJET.LAN/gabriele.rossetti/mspedebug-workdir
 paths_msp430gdb=/usr/bin/msp430-gdb
