@@ -9,7 +9,8 @@
 
 SCRIPTDIR=`dirname "$(readlink -f "$0")"`
 DEBUG_FILE="/tmp/mspdebughelper_anonymous.log"
-SETTINGS_FILE=$SCRIPTDIR"/settings"
+#SETTINGS_FILE=$SCRIPTDIR"/settings"
+SETTINGS_FILE=$1"/settings"
 cd "$SCRIPTDIR"
 
 # ===============================================================================

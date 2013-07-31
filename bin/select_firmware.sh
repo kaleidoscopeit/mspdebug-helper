@@ -17,10 +17,10 @@ select_firmware () {
 
 	# Remove any previous downloaded firmware file
 	debug -d "select_firmware : remove any previous firmware cache ... "
-	rm -f $paths_workdir/firmware.hex
-	rm -f $paths_workdir/firmware.conf
+	rm -f $paths_sessiondir/firmware.hex
+	rm -f $paths_sessiondir/firmware.conf
 
-	if [ -s $paths_workdir/firmware.hex ] ; then
+	if [ -s $paths_sessiondir/firmware.hex ] ; then
 		debug "FAIL\n"
 		# ------ EXIT CODE ------ #
 		return 5
@@ -31,23 +31,23 @@ select_firmware () {
 	# Detect the file origin (local or remote)
 	if [ `echo "${argv[0]}" | grep -c 'http:\/\/'` = 1 ]; then
 		debug -d "select_firmware : Download firmware file into fimware.hex (${argv[0]}) ... " 
-		wget --output-document=$paths_workdir/firmware.hex ${argv[0]} 1>$paths_workdir/wget.log 2>$paths_workdir/wget.log
+		wget --output-document=$paths_sessiondir/firmware.hex ${argv[0]} 1>$paths_sessiondir/wget.log 2>$paths_sessiondir/wget.log
 		BASENAME=`basename "${argv[0]}"`
 	else
 		debug -d "select_firmware : Copy firmware file into fimware.hex ... "
-		cp "${argv[0]}" "$paths_workdir/firmware.hex"
+		cp "${argv[0]}" "$paths_sessiondir/firmware.hex"
 		BASENAME=`basename "$(readlink -f "${argv[0]}")"`
 	fi
 
-	if [ -s $paths_workdir/firmware.hex ] ; then
+	if [ -s $paths_sessiondir/firmware.hex ] ; then
 		debug "OK\n"
 		# count the size of the firmware file
 		while read line; do
 			size=$(( size+0x${line:1:2} ))
-		done < $paths_workdir/firmware.hex
+		done < $paths_sessiondir/firmware.hex
 
 		# write firmware data
-		echo `dirname "${argv[0]}"`"	$BASENAME	"`md5sum $paths_workdir/firmware.hex | cut -f1 -d' '`"	"$size>$paths_workdir/firmware.conf
+		echo `dirname "${argv[0]}"`"	$BASENAME	"`md5sum $paths_sessiondir/firmware.hex | cut -f1 -d' '`"	"$size>$paths_sessiondir/firmware.conf
 
 		# ------ EXIT CODE ------ #
 		return 0

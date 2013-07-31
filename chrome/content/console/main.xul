@@ -12,7 +12,7 @@
 ]>
 
 <?xul-overlay href="chrome://mspdebughelper/content/console/anonymous.xul"?>
-<?xul-overlay href="chrome://mspdebughelper/content/console/general.xul"?>
+<?xul-overlay href="chrome://mspdebughelper/content/console/session.xul"?>
 <?xul-overlay href="chrome://mspdebughelper/content/console/mspdebug.xul"?>
 
 <window id="consoleWindow"
@@ -29,12 +29,12 @@
 	<tabbox id="myTabList" selectedIndex="0" flex="1">
 		<tabs>
 		  <tab label="&console.anonymous.label;" />
-		  <tab label="&console.general.label;"/>
+		  <tab label="&console.session.label;"/>
 		  <tab label="&console.mspdebug.label;"/>
 		</tabs>
 		<tabpanels flex="1">
 		  <tabpanel id="anonymous"></tabpanel>
-		  <tabpanel id="main"></tabpanel>
+		  <tabpanel id="session"></tabpanel>
 		  <tabpanel id="mspdebug"></tabpanel>
 		</tabpanels>
 	</tabbox>

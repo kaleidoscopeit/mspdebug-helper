@@ -93,7 +93,7 @@ var toolkit = {
 
   fill_dump_console: function(target)
   {	  
-    let data = mspdebughelper.read("/dump_memory/" + target + ".hex");
+    let data = mspdebughelper.read("/current/dump_memory/" + target + ".hex");
     let target_console = document.getElementById("dumpConsole");
     target_console.value = data;
     let pos = target_console.value.length;
@@ -143,14 +143,6 @@ toolkit.epv = {
     // ---- CLOSE PREVIOUS SESSION ---- //
     function(){
       mspdebughelper.callCommand('close_debug_session', [], function(data){
-        // call next batch event
-        toolkit.epv.call_batch();
-      });
-    },
-    
-    // ---- CLEAN PREVIOUS SESSION ---- //
-    function(){
-      mspdebughelper.callCommand('clean_debug_session', [], function(data){
         // call next batch event
         toolkit.epv.call_batch();
       });
@@ -356,14 +348,6 @@ toolkit.mdump = {
       });
     },
     
-    // ---- CLEAN PREVIOUS SESSION ---- //
-    function(){
-      mspdebughelper.callCommand('clean_debug_session', [], function(data){
-        // call next batch event
-        toolkit.mdump.call_batch();
-      });
-    },
-
     // ---- SELECT TARGET ---- //  
     function(){
       mspdebughelper.callCommand('select_target', ['auto'], function(data){

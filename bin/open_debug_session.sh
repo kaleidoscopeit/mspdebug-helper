@@ -8,7 +8,13 @@ open_debug_session () {
 	local MSPDEBUG_PID
 	local COUNTER=0
 	local paths_libmsp430=`dirname "$paths_libmsp430"`
+  local sessid=`date +"%d%m%y_%H%M%S"`
 
+  # Create a session subdirectory and link as current in workdir
+  mkdir $paths_workdir/sessions/$sessid
+  rm $paths_sessiondir
+  ln -s $paths_workdir/sessions/$sessid $paths_sessiondir
+    
 	check_debug_session
 	local ret_val=$?
 
@@ -25,6 +31,8 @@ open_debug_session () {
 		close_debug_session
 	fi
 
+
+
 	# Find if a debug tool exists depending by the given driver
 	DEVICE=`find_device $driver`
 
@@ -39,19 +47,25 @@ open_debug_session () {
     return 5
   fi
 
+  if [ $driver = "tilib" ]; then
+    DEVICENAME=`echo $DEVICE | sed -e 's/\/dev\///g'`;
+  else
+    DEVICENAME=$DEVICE
+  fi
+  
   # set link type
   if [ $link = "jtag" ]; then link="-j"; fi
   
   # Starts a debug session
   echo "---------- START SESSION ON DATE `date +"%b %d %H:%M:%S"` ----------"\
-    >>$paths_workdir/command_shots.log
+    >>$paths_sessiondir/command_shots.log
  
   if [ -n "$DEBUG" ]; then DEBUGSTRING=; fi
   COMMAND="LD_LIBRARY_PATH=$paths_libmsp430 $paths_mspdebug $driver "
-  COMMAND="$COMMAND --allow-fw-update $link -d $DEVICE 'opt gdb_loop 1' 'gdb' "
-  COMMAND="$COMMAND &>$paths_workdir/gdb.log &"
+  COMMAND="$COMMAND --allow-fw-update $link -d $DEVICENAME 'opt gdb_loop 1' 'gdb' "
+  COMMAND="$COMMAND &>$paths_sessiondir/gdb.log &"
   
-  echo $COMMAND>>$paths_workdir/command_shots.log
+  echo $COMMAND>>$paths_sessiondir/command_shots.log
 
   eval $COMMAND
 
@@ -63,7 +77,7 @@ open_debug_session () {
   debug -d "open_debug_session : Wait for gdb-proxy start... "
   while [ $COUNTER -lt 10 ];
   do
-    if [ ! -z "`tail -n1 $paths_workdir/gdb.log | grep 'Bound to port'`" ];
+    if [ ! -z "`tail -n1 $paths_sessiondir/gdb.log | grep 'Bound to port'`" ];
     then
       debug "OK\n"
 
@@ -71,9 +85,9 @@ open_debug_session () {
 			if [ -e $paths_workdir/target.conf ];
 			then
 				local TARGET=`cat $paths_workdir/target.conf`
-				if [ -z "`grep $TARGET $paths_workdir/gdb.log`" -a "$TARGET" != "auto" ];
+				if [ -z "`grep $TARGET $paths_sessiondir/gdb.log`" -a "$TARGET" != "auto" ];
 				then
-					debug -d "open_debug_session : Specified target (`cat $paths_workdir/target.conf`) not found.\n"
+					debug -d "open_debug_session : Specified target (`cat $paths_sessiondir/target.conf`) not found.\n"
 
 					close_debug_session
 					
@@ -99,7 +113,7 @@ open_debug_session () {
   close_debug_session
 
   # Checks if debug session were not started because no target was found (could never happen!)
-  if [ -n "`cat $paths_workdir/gdb.log | grep -i 'MSP430_OpenDevice: Unknown device'`" ];then
+  if [ -n "`cat $paths_sessiondir/gdb.log | grep -i 'MSP430_OpenDevice: Unknown device'`" ];then
     # ------ EXIT POINT------ target not found #
     return 6
   fi

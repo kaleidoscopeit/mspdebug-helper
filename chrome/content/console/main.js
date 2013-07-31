@@ -5,7 +5,7 @@ var console = {
     window.mspdebughelper =  gBrowser.mspdebughelper;
     setInterval(function(){with(console){
       fill_console('anonymous');
-      fill_console('main');
+      fill_console('session');
       fill_console('gdb');
     }},1000);
   },

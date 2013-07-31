@@ -20,7 +20,7 @@ mspdebughelper = {
 
     // Activate the comunication stack with the untrusted code
     document.addEventListener(
-      "mspdebughelper",
+      "MSPDdebugHelperEvt",
       this.rpcListener,
       false,
       true
@@ -133,7 +133,7 @@ mspdebughelper = {
       return false;
     }
 
-    // avoid concurency calls
+    // avoid concurrency calls
     if(this.commandIsRunning == true) return false;
     this.commandIsRunning = true;
 
@@ -152,7 +152,8 @@ mspdebughelper = {
     processInstance.init(commandInstance);
 
     data.unshift(commandName);    
-
+    data.unshift(this.get_workdir());
+    
     // executes the main process unless stop the program flow
     processInstance.runAsync(data, data.length, { 
       observe:function(subject,topic,data) {
@@ -189,7 +190,7 @@ mspdebughelper = {
       alert(this._bundlePreferences.getString("not_valid_write_settings"));
       return false;
     }
- 
+
     let processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
       
@@ -230,15 +231,22 @@ mspdebughelper = {
   {
     var node = event.target;
     var odoc = node.ownerDocument;
-    var data = node.getUserData("data");
-    var comm = data.shift();
-
+    var command = node.getAttribute("command");
+    var callback = node.getAttribute("callback");
+    var data = Array();
+    
+    node.removeAttribute("command");
+    node.removeAttribute("callback");    
+    
+		for(var i=0;i<node.attributes.length;i++)
+		  data[node.attributes[i].name]=node.attributes[i].value;
+   
     // Call the function hub and builds a 'per-call' callback function
-    return this.callCommand(comm, data, function(data){
-      if (!node.getUserData("c")) return odoc.documentElement.removeChild(node);
-      node.setUserData("data", data, null);
-      var listener = odoc.createEvent("HTMLEvents");
-      listener.initEvent(tokn, true, false);
+    return mspdebughelper.callCommand(command, data, function(argv){
+      if (!callback) return odoc.documentElement.removeChild(node);
+      for(var argn in argv) node.setAttribute(argn,argv[argn]);
+      var listener = odoc.createEvent("Events");
+      listener.initEvent(command, true, false);
       return node.dispatchEvent(listener);
     });
   },
@@ -268,7 +276,7 @@ mspdebughelper = {
 
 
 /*****************************************************************************
- * Checks if the MSPDebug executable has been defined and returs it's path
+ * Checks if the MSPDebug executable has been defined and returns it's path
  *****************************************************************************/
   get_mspdebug_path: function()
   {
@@ -337,8 +345,8 @@ mspdebughelper = {
 
     switch(target) {
       case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
-      case 'main' :      path = workDir + "/main.log";               break;      
-      case 'gdb' :       path = workDir + "/gdb.log";                break;
+      case 'session' :   path = workDir + "/current/main.log";       break;      
+      case 'gdb' :       path = workDir + "/current/gdb.log";        break;
       default :          path = workDir + target;                    break;
     }
 

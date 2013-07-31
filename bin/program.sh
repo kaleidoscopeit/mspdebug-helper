@@ -11,10 +11,10 @@ program_monitor () {
 	local cprogress
 
 	# get the size of the firmware file
-	local size=`cat $paths_workdir/firmware.conf | cut -d'	' -f 4`
+	local size=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 4`
 
 	# refresh the r-sorted gdb.log
-	cat -n $paths_workdir/gdb.log | tail -n 30 | sort -nr>$paths_workdir/gdb_rev.log
+	cat -n $paths_sessiondir/gdb.log | tail -n 30 | sort -nr>$paths_sessiondir/gdb_rev.log
 
 	while read line; do
 
@@ -52,10 +52,10 @@ verify_monitor () {
 	local cprogress
 
 	# get the size of the firmware file
-	local size=`cat $paths_workdir/firmware.conf | cut -d'	' -f 4`
+	local size=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 4`
 
 	# refresh the r-sorted gdb.log
-	cat -n $paths_workdir/gdb.log | tail -n 30 | sort -nr>$paths_workdir/gdb_rev.log
+	cat -n $paths_sessiondir/gdb.log | tail -n 30 | sort -nr>$paths_sessiondir/gdb_rev.log
 
 	while read line; do
 
@@ -71,7 +71,7 @@ verify_monitor () {
 		fi
 
 		(( count++ ))
-	done < $paths_workdir/gdb_rev.log
+	done < $paths_sessiondir/gdb_rev.log
 
 	cprogress=$(( progress*100/size ))
 
@@ -91,7 +91,7 @@ debug () {
 	fi
 
 	if [ -n "$VERBOSE" ]; then echo -n -e "$@">&2; fi
-	echo -n -e $DATE "$@">>$paths_workdir"/main.log"
+	echo -n -e $DATE "$@">>$paths_sessiondir"/main.log"
 }
 
 
@@ -126,18 +126,18 @@ function read_params {
 # MAIN
 # ===============================================================================
 
+WORKDIR=$1; shift
 SCRIPTDIR=`dirname "$(readlink -f "$0")"`
 cd "$SCRIPTDIR"
 
 # Toolkit imports
-source settings
+source $WORKDIR/settings
 source find_device.sh
 source select_target.sh
 source select_firmware.sh
 source open_debug_session.sh
 source close_debug_session.sh
 source check_debug_session.sh
-source clean_debug_session.sh
 source get_supported_targets.sh
 source erase.sh
 source do_program.sh
@@ -146,12 +146,12 @@ source write_string.sh
 source memory_dump.sh
 
 # Builds the workdir structure
-mkdir -p $paths_workdir/save
-
+mkdir -p $paths_workdir/sessions
+paths_sessiondir=$paths_workdir/current
+ 
 # Arguments handling
-echo $@ >> $paths_workdir/arguments
-COMMAND=$1
-shift
+echo $@ >> $paths_workdir"/arguments"
+COMMAND=$1; shift
 argv=("$@")
 read_params
 

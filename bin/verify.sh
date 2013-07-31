@@ -13,14 +13,12 @@ verify () {
     return 3;
   fi
 
-  rm -r $paths_workdir/down_buffer/
-  rm -r $paths_workdir/orig_buffer/
-  mkdir $paths_workdir/down_buffer
-  mkdir $paths_workdir/orig_buffer
+  mkdir $paths_sessiondir/down_buffer
+  mkdir $paths_sessiondir/orig_buffer
 
   # Verify the complete cleanup of the cache directory
-  if [ "`ls -l $paths_workdir/orig_buffer | grep -c '.*.hex'`" != "0" ] || 
-     [ "`ls -l $paths_workdir/down_buffer | grep -c '.*.hex'`" != "0" ]; then
+  if [ "`ls -l $paths_sessiondir/orig_buffer | grep -c '.*.hex'`" != "0" ] || 
+     [ "`ls -l $paths_sessiondir/down_buffer | grep -c '.*.hex'`" != "0" ]; then
     debug -d "verify : cache directories not clean.\n"
     return 4
   fi
@@ -40,7 +38,7 @@ verify () {
   local TARGET_CHUNKS
 
   # Check if the firmware file exists and its size is not zero
-  if [ ! -s $paths_workdir/firmware.hex ]; then
+  if [ ! -s $paths_sessiondir/firmware.hex ]; then
     debug -d "verify : Firmware file error.\n"
     return 4;
   fi
@@ -63,10 +61,10 @@ verify () {
     if [ $EXP_NEXT != $(( $START )) ]; then
       # Prevent null data dump
       if [ $(( $ORIG_START )) != $EXP_NEXT ]; then
-        BATCH="$BATCH -ex 'dump ihex memory $paths_workdir/down_buffer/$FILE $ORIG_START $EXP_NEXT' "
-        cat $paths_workdir/orig_buffer/$FILE.tmp>$paths_workdir/orig_buffer/$FILE
-        echo -e ":00000001FF\r">>$paths_workdir/orig_buffer/$FILE
-        rm $paths_workdir/orig_buffer/$FILE".tmp"
+        BATCH="$BATCH -ex 'dump ihex memory $paths_sessiondir/down_buffer/$FILE $ORIG_START $EXP_NEXT' "
+        cat $paths_sessiondir/orig_buffer/$FILE.tmp>$paths_sessiondir/orig_buffer/$FILE
+        echo -e ":00000001FF\r">>$paths_sessiondir/orig_buffer/$FILE
+        rm $paths_sessiondir/orig_buffer/$FILE".tmp"
       fi
 
       ORIG_START=$START
@@ -75,14 +73,14 @@ verify () {
 
     # Write only if there are datas
     if [ "$TYPE" = "00" ]; then
-      echo $line>>$paths_workdir/orig_buffer/$FILE".tmp"
+      echo $line>>$paths_sessiondir/orig_buffer/$FILE".tmp"
     fi
-  done < $paths_workdir/firmware.hex
+  done < $paths_sessiondir/firmware.hex
 
 
-  local sector_list=`ls $paths_workdir/orig_buffer | grep '.*.hex'`
-  local orig_chunks=`ls -l $paths_workdir/orig_buffer | grep -c '.*.hex'`
-  local firmware_size=`cat $paths_workdir/firmware.conf | cut -d'	' -f 4`
+  local sector_list=`ls $paths_sessiondir/orig_buffer | grep '.*.hex'`
+  local orig_chunks=`ls -l $paths_sessiondir/orig_buffer | grep -c '.*.hex'`
+  local firmware_size=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 4`
   local orig_size
   local down_size
 
@@ -99,7 +97,7 @@ verify () {
   for file in $sector_list; do
     while read line; do
       orig_size=$(( orig_size+0x${line:1:2} ))
-    done < $paths_workdir/orig_buffer/$file
+    done < $paths_sessiondir/orig_buffer/$file
   done
 
   if [ "$firmware_size" != "$orig_size" ]; then
@@ -127,19 +125,19 @@ verify () {
   debug -d "verify : Download firmware from target memory... "
 
   echo "---------- VERIFY ON DATE `date +"%b %d %H:%M:%S"` ----------"\
-    >>$paths_workdir/command_shots.log
+    >>$paths_sessiondir/command_shots.log
 
   COMMAND="$paths_msp430gdb --batch "\
   COMMAND=$COMMAND" -ex \"target remote localhost:2000\" "$BATCH\
-  COMMAND=$COMMAND">>$paths_workdir/command_shots.log "\
-  COMMAND=$COMMAND"2>$paths_workdir/verify_error.log"
+  COMMAND=$COMMAND">>$paths_sessiondir/command_shots.log "\
+  COMMAND=$COMMAND"2>$paths_sessiondir/verify_error.log"
 
-  echo $COMMAND>>$paths_workdir/command_shots.log
+  echo $COMMAND>>$paths_sessiondir/command_shots.log
   
   eval $COMMAND
 
   # Check if the corresponding chunk was downloaded from target memory
-  local target_chunks=`ls -l $paths_workdir/down_buffer | grep -c '.*.hex'`
+  local target_chunks=`ls -l $paths_sessiondir/down_buffer | grep -c '.*.hex'`
   if [ "$orig_chunks" != "$target_chunks" ];then
     debug "FAIL.\n"
     debug -d "verify : Original chunks number differ than downloaded"\
@@ -154,7 +152,7 @@ verify () {
   for file in $sector_list; do
     while read line; do
       down_size=$(( down_size+0x${line:1:2} )) 
-    done < $paths_workdir/down_buffer/$file
+    done < $paths_sessiondir/down_buffer/$file
   done
   
   if [ "$firmware_size" != "$down_size" ]; then
@@ -174,13 +172,13 @@ verify () {
 
   # Finally compares the hash of each pairs of serctors file, one obtained 
   # from the original file and other obtained from the microprocessor memory
-  SECTORS_LIST=`ls $paths_workdir/orig_buffer | grep '.*.hex'`
+  SECTORS_LIST=`ls $paths_sessiondir/orig_buffer | grep '.*.hex'`
   COUNT=0
   
   for FILE in $SECTORS_LIST; do
     debug -d "verify : Verify data chunk for file $FILE..."
-    DIFF_A=`md5sum -b $paths_workdir/orig_buffer/$FILE | cut -f1 -d' '`
-    DIFF_B=`md5sum -b $paths_workdir/down_buffer/$FILE | cut -f1 -d' '`
+    DIFF_A=`md5sum -b $paths_sessiondir/orig_buffer/$FILE | cut -f1 -d' '`
+    DIFF_B=`md5sum -b $paths_sessiondir/down_buffer/$FILE | cut -f1 -d' '`
     if [ "$DIFF_A" != "$DIFF_B" ]; then
       debug "FAIL\n"
       echo "verify : chunk file '$FILE' didn't match."

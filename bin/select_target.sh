@@ -18,9 +18,9 @@ select_target () {
 		return 3;
 	fi
 
-	echo $1>$paths_workdir/target.conf
+	echo $1>$paths_sessiondir/target.conf
 
-	if [ "`cat $paths_workdir/target.conf`" == "$1" ]; then
+	if [ "`cat $paths_sessiondir/target.conf`" == "$1" ]; then
 		# ------ EXIT POINT------ everything well #
 		debug -d "select_target : Target selected -> $1.\n"
 		return 0

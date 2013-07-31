@@ -10,7 +10,7 @@ write_string () {
 	local VALUE
 	local BATCH
 
-	mkdir $paths_workdir/ws_buffer >/dev/null
+	mkdir $paths_sessiondir/ws_buffer >/dev/null
 
 	# Find for any already started session
 	check_debug_session
@@ -29,10 +29,10 @@ write_string () {
 	fi
 
 	# initialize batch files
-	echo "target remote localhost:2000">$paths_workdir/gdb.batch
-	echo >$paths_workdir/gdb.batch.erase
-	echo >$paths_workdir/gdb.batch.mw
-	echo >$paths_workdir/gdb.batch.dump
+	echo "target remote localhost:2000">$paths_sessiondir/gdb.batch
+	echo >$paths_sessiondir/gdb.batch.erase
+	echo >$paths_sessiondir/gdb.batch.mw
+	echo >$paths_sessiondir/gdb.batch.dump
 
 	debug -d "write_string : Making batch...\n"
 
@@ -47,23 +47,23 @@ write_string () {
 		DATA_HEX[$i]="`echo -n ${DATA[$i]} | od -A n -t x1 |sed 's/^ //g'`"
 
 		# compose batch file
-		echo "monitor erase segment ${ADDRESS[$i]} ${SIZE[$i]}">>$paths_workdir/gdb.batch.erase
-		echo "monitor mw ${ADDRESS[$i]} ${DATA_HEX[$i]}">>$paths_workdir/gdb.batch.mw
-		echo "dump bin memory $paths_workdir/ws_buffer/${ADDRESS[$i]}.bin ${ADDRESS[$i]} `printf '0x%x\n' $(( ${ADDRESS[$i]}+${SIZE[$i]} ))`">>$paths_workdir/gdb.batch.dump
+		echo "monitor erase segment ${ADDRESS[$i]} ${SIZE[$i]}">>$paths_sessiondir/gdb.batch.erase
+		echo "monitor mw ${ADDRESS[$i]} ${DATA_HEX[$i]}">>$paths_sessiondir/gdb.batch.mw
+		echo "dump bin memory $paths_sessiondir/ws_buffer/${ADDRESS[$i]}.bin ${ADDRESS[$i]} `printf '0x%x\n' $(( ${ADDRESS[$i]}+${SIZE[$i]} ))`">>$paths_sessiondir/gdb.batch.dump
 	done
 
-	cat $paths_workdir/gdb.batch.erase $paths_workdir/gdb.batch.mw $paths_workdir/gdb.batch.dump >> $paths_workdir/gdb.batch
+	cat $paths_sessiondir/gdb.batch.erase $paths_sessiondir/gdb.batch.mw $paths_sessiondir/gdb.batch.dump >> $paths_sessiondir/gdb.batch
 
 	debug -d "write_string : write data ... "
 	
-	echo "---------- WRITE STRING ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_workdir/command_shots.log
+	echo "---------- WRITE STRING ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_sessiondir/command_shots.log
 
   COMMAND="$paths_msp430gdb --batch"
-	COMMAND="$COMMAND -x $paths_workdir/gdb.batch"
-  COMMAND="$COMMAND >>$paths_workdir/command_shots.log"
-  COMMAND="$COMMAND 2>$paths_workdir/write_string_error.log"
+	COMMAND="$COMMAND -x $paths_sessiondir/gdb.batch"
+  COMMAND="$COMMAND >>$paths_sessiondir/command_shots.log"
+  COMMAND="$COMMAND 2>$paths_sessiondir/write_string_error.log"
 
-  echo $COMMAND>>$paths_workdir/command_shots.log
+  echo $COMMAND>>$paths_sessiondir/command_shots.log
   
   eval $COMMAND
 
@@ -79,7 +79,7 @@ write_string () {
 
 	for (( i = 0 ; i < ${#ADDRESS[@]} ; i++ )); do
 		debug -d "write_string : verify data for address : ${ADDRESS[$i]} ... "
-		if [ "`cat $paths_workdir/ws_buffer/${ADDRESS[$i]}.bin`" == "${DATA[$i]}" ];then
+		if [ "`cat $paths_sessiondir/ws_buffer/${ADDRESS[$i]}.bin`" == "${DATA[$i]}" ];then
 			debug "OK\n"
 		else
 			debug "FAIL\n"

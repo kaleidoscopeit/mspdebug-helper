@@ -9,7 +9,7 @@
 <!ENTITY console.window.height                  "480">
 
 <!ENTITY console.anonymous.label                "Anonimo">
-<!ENTITY console.general.label                  "Generale">
+<!ENTITY console.session.label                  "Sessione">
 <!ENTITY console.mspdebug.label                 "MspDebug">
 
 <!ENTITY preferences.pane.about.label           "Informazioni">
