@@ -14,7 +14,7 @@ program_monitor () {
 	local size=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 4`
 
 	# refresh the r-sorted gdb.log
-	cat -n $paths_sessiondir/gdb.log | tail -n 30 | sort -nr>$paths_sessiondir/gdb_rev.log
+	cat -n $paths_sessiondir/gdb.log | sort -nr>$paths_sessiondir/gdb_rev.log
 
 	while read line; do
 
@@ -30,7 +30,7 @@ program_monitor () {
 		fi
 
 		(( count++ ))
-	done < $paths_workdir/gdb_rev.log
+	done < $paths_sessiondir/gdb_rev.log
 
 	cprogress=$(( progress*100/size ))
 
@@ -138,12 +138,14 @@ source select_firmware.sh
 source open_debug_session.sh
 source close_debug_session.sh
 source check_debug_session.sh
+source new_session.sh
 source get_supported_targets.sh
 source erase.sh
 source do_program.sh
 source verify.sh
 source write_string.sh
 source memory_dump.sh
+source control_parallel_pin.sh
 
 # Builds the workdir structure
 mkdir -p $paths_workdir/sessions
@@ -158,7 +160,7 @@ read_params
 # Switches to target function
 case "$COMMAND" in
 	find_device)
-		find_device $argv
+		find_device ${argv[@]}
 		;;
 	get_supported_targets)
 		get_supported_targets
@@ -166,42 +168,49 @@ case "$COMMAND" in
 	open_debug_session)
 		open_debug_session
 		;;
+	new_session)
+		new_session
+		;;
 	close_debug_session)
 		close_debug_session
 		;;
 	select_target)
-		select_target $argv
+		select_target ${argv[@]}
 		;;
 	clean_debug_session)
 		clean_debug_session
 		;;
 	select_firmware)
-		select_firmware $argv
+		select_firmware ${argv[@]}
 		;;
 	program)
-		program
+		program ${argv[@]}
 		;;
 	program_monitor)
 		program_monitor
 		;;
 	verify)
-		verify
+		verify ${argv[@]}
 		;;
 	verify_monitor)
-		verify_monitor
+		verify_monitor ${argv[@]}
 		;;
 	erase)
-		erase $argv
+		erase ${argv[@]}
 		;;
 	write_string)
-		write_string
+		write_string ${argv[@]}
 		;;
 	memory_dump)
-		memory_dump $argv
-		;;		
+		memory_dump ${argv[@]}
+		;;
+	control_parallel_pin)
+		control_parallel_pin ${argv[@]}
+		;;				
 	*)
 		debug -d "program : command not recognized ($COMMAND)\n"
 		echo  "program : command not recognized ($COMMAND)"
+		exit 255
 		;;
 esac
 

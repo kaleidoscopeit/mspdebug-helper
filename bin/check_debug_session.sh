@@ -19,7 +19,7 @@ check_debug_session () {
 	fi
 
 	# Checks if there are debug sessions already started not owned by this tool
-	MSPDEBUG_PID=`ps aux | grep mspdebug.*tilib.*gdb | grep -c -v grep`
+	MSPDEBUG_PID=`ps aux | grep mspdebug.*.*gdb | grep -c -v grep`
 
 	if [ "$MSPDEBUG_PID" -ne "0" ] && [ $NO_SESSION -eq "1" ]; then
 		debug -d "check_debug_session : A session is already started but is not managed by this tool.\n"

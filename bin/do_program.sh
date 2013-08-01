@@ -23,7 +23,8 @@ program () {
 	local FIRMWARE_PATH=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 1`
 	local FIRMWARE_NAME=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 2`
 	local FIRMWARE_MD5=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 3`
-
+  local FIRMWARE_SIZE=`cat $paths_sessiondir/firmware.conf | cut -d'	' -f 4`
+  
 	debug -d "program : Load required firmware ($FIRMWARE_NAME) into microprocessor memory... "
 
 	echo "---------- PROGRAM ON DATE `date +"%b %d %H:%M:%S"` ----------">>$paths_sessiondir/command_shots.log
@@ -32,19 +33,20 @@ program () {
 	COMMAND="$COMMAND -ex \"target remote localhost:2000\""
   COMMAND="$COMMAND -ex \"monitor prog \"$FIRMWARE"
   COMMAND="$COMMAND >>$paths_sessiondir/command_shots.log"
-  COMMAND="$COMMAND 2>$paths_sessiondir/program_error.log"
+  COMMAND="$COMMAND 2>$paths_sessiondir/program.log"
 
   echo $COMMAND>>$paths_sessiondir/command_shots.log
   
   eval $COMMAND
 
-	ret_val=$((`cat $paths_sessiondir/program_error.log | grep -c -i 'error'`))
+	ret_val=$((`cat $paths_sessiondir/program.log | grep -c -i "Done, $FIRMWARE_SIZE bytes total"`))
 
-	if [ $ret_val != "0" ]; then
-		debug "FAIL.\n"
+	if [ $ret_val = "1" ]; then
+		debug "OK.\n"
 		# ------ EXIT CODE ------ #
-		return 5
+		return 1
 	fi
 
-	debug "OK.\n"
+	debug "FAIL.\n"
+	return 5
 }

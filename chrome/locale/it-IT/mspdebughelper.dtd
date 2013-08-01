@@ -27,6 +27,8 @@
 <!ENTITY preferences.paths.libmsp430.accesskey  "i">
 <!ENTITY preferences.paths.msp430gdb.label      "msp430-gdb">
 <!ENTITY preferences.paths.msp430gdb.accesskey  "g">
+<!ENTITY preferences.paths.pport.label          "pport">
+<!ENTITY preferences.paths.pport.accesskey      "r">
 
 <!ENTITY preferences.paths.workdir.title        "Selezionare la directory di lavoro">
 <!ENTITY preferences.paths.workdir.label        "Percorso">

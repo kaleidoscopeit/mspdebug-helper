@@ -8,31 +8,15 @@ open_debug_session () {
 	local MSPDEBUG_PID
 	local COUNTER=0
 	local paths_libmsp430=`dirname "$paths_libmsp430"`
-  local sessid=`date +"%d%m%y_%H%M%S"`
 
-  # Create a session subdirectory and link as current in workdir
-  mkdir $paths_workdir/sessions/$sessid
-  rm $paths_sessiondir
-  ln -s $paths_workdir/sessions/$sessid $paths_sessiondir
-    
 	check_debug_session
 	local ret_val=$?
 
-	if [ "$ret_val" -eq "0" ] ;
-	then
-		# ------ EXIT POINT------ debug session already started #
-		debug -d "open_debug_session : Session already started.\n"
-    return 3;
-
-  elif [ "$ret_val" -ne "1" ] ;
-  then
-		# ------ EXIT POINT------ debug session already started #
-		debug -d "open_debug_session : Foreing session already started. Try to kill\n"
-		close_debug_session
+	if [ "$ret_val" -eq "0" ]; then
+		debug -d "open_debug_session : A debug session is already active.\n"
+		return 3;
 	fi
-
-
-
+	
 	# Find if a debug tool exists depending by the given driver
 	DEVICE=`find_device $driver`
 
@@ -82,9 +66,9 @@ open_debug_session () {
       debug "OK\n"
 
 			# If a specific target was selected do checks
-			if [ -e $paths_workdir/target.conf ];
+			if [ -e $paths_sessiondir/target.conf ];
 			then
-				local TARGET=`cat $paths_workdir/target.conf`
+				local TARGET=`cat $paths_sessiondir/target.conf`
 				if [ -z "`grep $TARGET $paths_sessiondir/gdb.log`" -a "$TARGET" != "auto" ];
 				then
 					debug -d "open_debug_session : Specified target (`cat $paths_sessiondir/target.conf`) not found.\n"

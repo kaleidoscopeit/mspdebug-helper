@@ -115,7 +115,7 @@ mspdebughelper = {
 /*****************************************************************************
  * Call programming functions 
  *****************************************************************************/
-  callCommand: function(commandName, data, callback)
+  callCommand: function(commandName, argv, callback)
   {
     // some checks
     if (!this.get_workdir()) {
@@ -134,8 +134,8 @@ mspdebughelper = {
     }
 
     // avoid concurrency calls
-    if(this.commandIsRunning == true) return false;
-    this.commandIsRunning = true;
+//    if(this.commandIsRunning == true) return false;
+//    this.commandIsRunning = true;
 
     // hooks main process
     let commandPath     = this.addonLocation + "/bin/program.sh";
@@ -151,12 +151,12 @@ mspdebughelper = {
 
     processInstance.init(commandInstance);
 
-    data.unshift(commandName);    
-    data.unshift(this.get_workdir());
-    
+    argv.unshift(commandName);    
+    argv.unshift(this.get_workdir());
+
     // executes the main process unless stop the program flow
-    processInstance.runAsync(data, data.length, { 
-      observe:function(subject,topic,data) {
+    processInstance.runAsync(argv, argv.length, { 
+      observe:function(subject,topic,argv) {
         if (topic == "process-finished") {
           mspdebughelper.commandIsRunning = false;
           let processInstance = subject
@@ -233,16 +233,16 @@ mspdebughelper = {
     var odoc = node.ownerDocument;
     var command = node.getAttribute("command");
     var callback = node.getAttribute("callback");
-    var data = Array();
+    var argv = Array();
     
     node.removeAttribute("command");
     node.removeAttribute("callback");    
     
 		for(var i=0;i<node.attributes.length;i++)
-		  data[node.attributes[i].name]=node.attributes[i].value;
-   
+		  argv.push(node.attributes[i].value);
+    
     // Call the function hub and builds a 'per-call' callback function
-    return mspdebughelper.callCommand(command, data, function(argv){
+    return mspdebughelper.callCommand(command, argv, function(argv){
       if (!callback) return odoc.documentElement.removeChild(node);
       for(var argn in argv) node.setAttribute(argn,argv[argn]);
       var listener = odoc.createEvent("Events");
