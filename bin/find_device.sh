@@ -58,7 +58,7 @@ find_device () {
 	
 	fi
 
-	if [ ${#devices[@]} > 0 ]
+	if [ ${#devices[@]} -gt 0 ]
 	then
 		debug -d "find_device : Found ${#devices[@]} devices.\n"
     rm $paths_workdir/devices
