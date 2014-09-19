@@ -31,7 +31,7 @@ select_firmware () {
 	# Detect the file origin (local or remote)
 	if [ `echo "${argv[0]}" | grep -c 'http:\/\/'` = 1 ]; then
 		debug -d "select_firmware : Download firmware file into fimware.hex (${argv[0]}) ... " 
-		wget --output-document=$paths_sessiondir/firmware.hex ${argv[0]} 1>$paths_sessiondir/wget.log 2>$paths_sessiondir/wget.log
+		wget --output-document=$paths_sessiondir/firmware.hex "${argv[0]}" 1>$paths_sessiondir/wget.log 2>$paths_sessiondir/wget.log
 		BASENAME=`basename "${argv[0]}"`
 	else
 		debug -d "select_firmware : Copy firmware file into fimware.hex ... "

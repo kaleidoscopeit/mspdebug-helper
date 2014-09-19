@@ -21,7 +21,7 @@ memory_dump () {
       local TARGET_FILE=$paths_sessiondir"/dump_memory/all.hex"
         
       COMMAND="$paths_msp430gdb --batch"
-  		COMMAND="$COMMAND -ex \"target remote localhost:2000\""
+    COMMAND="$COMMAND -ex \"target remote localhost:2000\""
   	  COMMAND="$COMMAND -ex \"dump ihex memory $TARGET_FILE 0x0000 0xFFFF\""
   	  COMMAND="$COMMAND >>$paths_sessiondir/command_shots.log"
   	  COMMAND="$COMMAND 2>$paths_sessiondir/dump_memory_error.log"  

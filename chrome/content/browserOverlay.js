@@ -48,12 +48,12 @@ mspdebughelper = {
     // Get the extension path
     Components.utils.import("resource://gre/modules/AddonManager.jsm");    
 
-    AddonManager.getAddonByID("mspdebughelper@soundcafe.it",
-      function(addon) {
-        mspdebughelper.addonLocation = addon.getResourceURI("")
-          .QueryInterface(Components.interfaces.nsIFileURL).file.path;
-      }
-    );
+    AddonManager.getAddonByID("mspdebughelper@soundcafe.it", function(addon)
+    {
+      mspdebughelper.addonLocation = addon.getResourceURI("")
+        .QueryInterface(Components.interfaces.nsIFileURL).file.path;
+     
+    });
 
     // Setup locale file reference
     this._bundlePreferences = document
@@ -115,8 +115,9 @@ mspdebughelper = {
 /*****************************************************************************
  * Call programming functions 
  *****************************************************************************/
-  callCommand: function(commandName, argv, callback)
+  callCommand: function(commandName, args, callback)
   {
+
     // some checks
     if (!this.get_workdir()) {
       alert(this._bundlePreferences.getString("not_valid_workdir"));
@@ -138,28 +139,28 @@ mspdebughelper = {
 //    this.commandIsRunning = true;
 
     // hooks main process
-    let commandPath     = this.addonLocation + "/bin/program.sh";
-    let commandInstance = this.get_file_instance(commandPath, true);
+    var commandPath     = this.addonLocation + "/bin/program.sh";
+    var commandInstance = this.get_file_instance(commandPath, true);
 
     if (!commandInstance) {
       alert(this._bundlePreferences.getString("not_valid_program"));
       return false;
     }
             
-    let processInstance = Components.classes["@mozilla.org/process/util;1"]
+    var processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
 
     processInstance.init(commandInstance);
 
-    argv.unshift(commandName);    
-    argv.unshift(this.get_workdir());
+    args.unshift(commandName);    
+    args.unshift(this.get_workdir());
 
     // executes the main process unless stop the program flow
-    processInstance.runAsync(argv, argv.length, { 
+    processInstance.runAsync(args, args.length, { 
       observe:function(subject,topic,argv) {
         if (topic == "process-finished") {
           mspdebughelper.commandIsRunning = false;
-          let processInstance = subject
+          var processInstance = subject
             .QueryInterface(Components.interfaces.nsIProcess);
           callback({result:processInstance.exitValue});
 
@@ -175,7 +176,7 @@ mspdebughelper = {
   upgradeSettingsFile: function()
   {
     // some checks
-    let workDir = this.get_workdir();
+    var workDir = this.get_workdir();
 
     if (!this.get_workdir()) {
       alert(this._bundlePreferences.getString("not_valid_workdir"));
@@ -183,25 +184,25 @@ mspdebughelper = {
     }
 
     // hooks main process
-    let commandPath     = this.addonLocation + "/bin/write_settings.sh";
-    let commandInstance = this.get_file_instance(commandPath, true);
+    var commandPath     = this.addonLocation + "/bin/write_settings.sh";
+    var commandInstance = this.get_file_instance(commandPath, true);
 
     if (!commandInstance) {
       alert(this._bundlePreferences.getString("not_valid_write_settings"));
       return false;
     }
 
-    let processInstance = Components.classes["@mozilla.org/process/util;1"]
+    var processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
       
     processInstance.init(commandInstance);
 
-    for (let key in this._preferences) {
-      let propertyName = this._preferences[key];
-      let propertyValue = this._prefService.getComplexValue(propertyName
+    for (var key in this._preferences) {
+      var propertyName = this._preferences[key];
+      var propertyValue = this._prefService.getComplexValue(propertyName
           ,Components.interfaces.nsIPrefLocalizedString).data;
 
-      let data = [workDir,'set',propertyName,propertyValue];
+      var data = [workDir,'set',propertyName,propertyValue];
       processInstance.run(true,data,data.length);
 
       if (processInstance.exitValue != 0) {
@@ -257,13 +258,13 @@ mspdebughelper = {
  *****************************************************************************/
   get_workdir: function()
   {
-    let workdir = this._prefService
+    var workdir = this._prefService
       .getComplexValue("paths_workdir"
         ,Components.interfaces.nsIPrefLocalizedString).data;
 
     if (workdir == null | workdir == '') return false;
 
-    let file = this.get_file_instance(workdir, true, true);
+    var file = this.get_file_instance(workdir, true, true);
 
     if (file)    
 
@@ -280,7 +281,7 @@ mspdebughelper = {
  *****************************************************************************/
   get_mspdebug_path: function()
   {
-    let mspdebug = this._prefService
+    var mspdebug = this._prefService
       .getComplexValue("paths_mspdebug"
         ,Components.interfaces.nsIPrefLocalizedString).data;
 
@@ -291,7 +292,7 @@ mspdebughelper = {
       return false;
     }
 
-    let file = this.get_file_instance(mspdebug, true);
+    var file = this.get_file_instance(mspdebug, true);
      
     if (file) return mspdebug;
      
@@ -306,11 +307,11 @@ mspdebughelper = {
  *****************************************************************************/
   check_libmsp430: function()
   {
-    let libmsp430 = this._prefService
+    var libmsp430 = this._prefService
       .getComplexValue("paths_libmsp430"
         ,Components.interfaces.nsIPrefLocalizedString).data;
 
-    let driver = this._prefService
+    var driver = this._prefService
       .getComplexValue("driver"
         ,Components.interfaces.nsIPrefLocalizedString).data;
 
@@ -334,10 +335,11 @@ mspdebughelper = {
 /*****************************************************************************
  * Read one of the debug files
  *****************************************************************************/
-  read: function(target, param = null) {
-    let workDir = this.get_workdir();
-    let path;
+  read: function(target, param) {
     
+    var workDir = this.get_workdir();
+    var path;
+
     if (!workDir) {
       alert(this._bundlePreferences.getString("not_valid_workdir"));           
       return false;
@@ -347,14 +349,13 @@ mspdebughelper = {
       case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
       case 'session' :   path = workDir + "/current/main.log";       break;      
       case 'gdb' :       path = workDir + "/current/gdb.log";        break;
-      default :          path = workDir + target;                    break;
+      case 'devices' :   path = workDir + "/devices.txt";            break;
+      default :          path = workDir + "/" + target;              break;
     }
 
-
-    let file = this.get_file_instance(path);
-    
+    var file = this.get_file_instance(path);
     if (!file) return false;
-        
+
     var data = "";
     var fstream = Components
                  .classes["@mozilla.org/network/file-input-stream;1"]
@@ -382,7 +383,7 @@ mspdebughelper = {
 /*****************************************************************************
  * File instance helper
  *****************************************************************************/
-  get_file_instance: function(path,x=false,d=false)
+  get_file_instance: function(path,x,d)
   {
     var file = Components.classes["@mozilla.org/file/local;1"]
               .createInstance(Components.interfaces.nsILocalFile);

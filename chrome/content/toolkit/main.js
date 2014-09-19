@@ -48,12 +48,17 @@ var toolkit = {
   {
     this.mainWindow.toolkit = this;
 
-    mspdebughelper.callCommand('get_supported_targets', [], function()
+    mspdebughelper.callCommand('get_supported_targets', [], function(argv)
     {
-      let data = mspdebughelper.read('gdb').split('\n');
-      let cfamily;
+      if(argv.result != '0') {
+        console.log(argv);
+        return;
+      }
+            
+      var data = mspdebughelper.read('devices').split('\n');
+      var cfamily;
 
-      for(let i=0;i<data.length;i++) {
+      for(var i=0;i<data.length;i++) {
         if(data[i] == "Devices supported by FET driver:")
           cfamily = "fet";
           
@@ -331,7 +336,7 @@ toolkit.mdump = {
     toolkit.status_icons.mdump.src = toolkit.icon.wait;
     
     toolkit.dump_type= document.getElementById('dump_type').value;
-    toolkit.pmon  = setInterval("toolkit.fill_console('main')",1000);
+   // toolkit.pmon  = setInterval("toolkit.fill_console('main')",1000);
     this.batch_count = 0;        
     this.call_batch();
   },
@@ -346,6 +351,26 @@ toolkit.mdump = {
         // call next batch event
         toolkit.mdump.call_batch();
       });
+    },
+    
+    // ---- START A NEW SESSION (2012) ---- //
+    function(){
+      mspdebughelper.callCommand('new_session', [],function(data){
+
+        switch(data.result){
+          case 0:
+          case 1:
+            toolkit.mdump.call_batch();
+            break;
+          case 2:
+            toolkit.mdump.except('new_session: unkillable unknown session');
+            break;
+          
+          // unhandled error
+          default:
+            toolkit.mdump.except('select_target: unhandled exception');
+        }
+      })
     },
     
     // ---- SELECT TARGET ---- //  
