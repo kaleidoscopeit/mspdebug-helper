@@ -7,12 +7,12 @@
 		<em:id>mspdebughelper@soundcafe.it</em:id>
 		<em:name>MSPDebug Helper</em:name>
 		<em:description>Allow to use Daniel Beer's 'MSPDebug' within a Web application</em:description>
-		<em:version>1.0.0</em:version>
+		<em:version>1.5.1</em:version>
 		<em:type>2</em:type>
 		<em:creator>Gabriele Rossetti</em:creator>
-		<em:homepageURL>http://www.soundcafe.it/mspdebughelper</em:homepageURL>
-		<em:iconURL>chrome://mspdebughelper/skin/logo.png</em:iconURL>
-		<em:aboutURL>chrome://mspdebughelper/content/about.xul</em:aboutURL>
+		<em:homepageURL>https://github.com/kaleidoscopeit/mspdebug-helper</em:homepageURL>
+		<em:iconURL>chrome://mspdebughelper/skin/icons/logo.48.png</em:iconURL>
+		<em:aboutURL>chrome://mspdebughelper/content/preferences/about.xul</em:aboutURL>
 		<em:optionsURL>chrome://mspdebughelper/content/preferences/main.xul</em:optionsURL>
 		<em:optionsType>1</em:optionsType>
 		<em:unpack>true</em:unpack>

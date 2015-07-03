@@ -15,10 +15,9 @@
 <!ENTITY preferences.pane.about.label           "Informazioni">
 <!ENTITY preferences.pane.device.label          "Connessione">
 <!ENTITY preferences.pane.paths.label           "Percorsi">
-<!ENTITY preferences.pane.check.label           "Verifica">
 <!ENTITY preferences.title                      "MSPDebug Helper - Pannello delle preferenze">
 <!ENTITY preferences.window.width               "480">
-<!ENTITY preferences.window.height              "320">
+<!ENTITY preferences.window.height              "200">
 
 <!ENTITY preferences.paths.files.title          "Selezionare il percorso dei comandi">
 <!ENTITY preferences.paths.mspdebug.label       "MSPDebug">
@@ -57,7 +56,7 @@
 
 <!ENTITY toolkit.program.erase.label             "Cancellare :">
 <!ENTITY toolkit.program.erase.all               "Tutta la memoria (ALL)">
-<!ENTITY toolkit.program.erase.main              "Solo la memoria programma (MAIN)">
+<!ENTITY toolkit.program.erase.fwmem             "Solo la memoria programma">
 
 <!ENTITY toolkit.program.do.label                "Esegui : ">
 <!ENTITY toolkit.program.do.epv                  "EPV">
@@ -74,6 +73,9 @@
 
 <!ENTITY toolkit.dump_mem.segment.label          "Range da :">
 <!ENTITY toolkit.dump_mem.segment.label2         "a :">
+<!ENTITY toolkit.dump_mem.progress.label         "Avanzamento">
 
 <!ENTITY toolkit.dump_mem.do.label               "Esegui : ">
 <!ENTITY toolkit.dump_mem.do.read                "Leggi memoria">
+
+<!ENTITY toolkit.commands.updatefw.label         "Aggiorna firmware">

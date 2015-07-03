@@ -62,16 +62,6 @@ mspdebughelper = {
 
 
 /*****************************************************************************
- * Shows about window
- *****************************************************************************/
-  showAbout: function()
-  {
-    window.openDialog("chrome://mspdebughelper/content/about.xul",
-      "mspdebughelper-about-window", "chrome,modal,centerscreen,dialog");
-  },
-
-
-/*****************************************************************************
  * Shows console window
  *****************************************************************************/
   showConsole: function()
@@ -139,7 +129,7 @@ mspdebughelper = {
 //    this.commandIsRunning = true;
 
     // hooks main process
-    var commandPath     = this.addonLocation + "/bin/program.sh";
+    var commandPath     = this.addonLocation + "/bin/mspdebughelper.sh";
     var commandInstance = this.get_file_instance(commandPath, true);
 
     if (!commandInstance) {
@@ -346,10 +336,10 @@ mspdebughelper = {
     }
 
     switch(target) {
-      case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
-      case 'session' :   path = workDir + "/current/main.log";       break;      
+      case 'session' :   path = workDir + "/session.log";            break;      
       case 'gdb' :       path = workDir + "/current/gdb.log";        break;
       case 'devices' :   path = workDir + "/devices.txt";            break;
+      case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
       default :          path = workDir + "/" + target;              break;
     }
 

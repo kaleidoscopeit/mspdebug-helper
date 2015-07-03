@@ -28,14 +28,14 @@
 
 	<tabbox id="myTabList" selectedIndex="0" flex="1">
 		<tabs>
-		  <tab label="&console.anonymous.label;" />
 		  <tab label="&console.session.label;"/>
 		  <tab label="&console.mspdebug.label;"/>
+      <tab label="&console.anonymous.label;" />
 		</tabs>
 		<tabpanels flex="1">
-		  <tabpanel id="anonymous"></tabpanel>
 		  <tabpanel id="session"></tabpanel>
 		  <tabpanel id="mspdebug"></tabpanel>
+      <tabpanel id="anonymous"></tabpanel>
 		</tabpanels>
 	</tabbox>
 

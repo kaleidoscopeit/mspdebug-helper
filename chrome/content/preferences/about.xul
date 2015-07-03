@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE overlay SYSTEM
-	"chrome://mspdebughelper/content/componentInfo.dtd">
+<!DOCTYPE overlay [
+  <!ENTITY % componentInfoDTD SYSTEM
+    "chrome://mspdebughelper/content/componentInfo.dtd">
+  <!ENTITY % preferencesDTD SYSTEM
+    "chrome://mspdebughelper/locale/mspdebughelper.dtd">
+  %componentInfoDTD;
+  %preferencesDTD;
+]>
 
-<overlay
+<overlay id="paneAboutOverlay"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <prefpane id="paneAbout">
@@ -12,7 +18,7 @@
 
 			<vbox>
 				<hbox>
-					<image src="chrome://mspdebughelper/skin/logo.png" />
+					<image src="chrome://mspdebughelper/skin/icons/logo.48.png" />
 					<spring flex="1"/>
 				</hbox>
 				<separator />

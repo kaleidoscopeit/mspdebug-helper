@@ -24,16 +24,15 @@
 					src="chrome://mspdebughelper/content/preferences/main.js" />
 
 	<prefpane id="paneAbout" label="&preferences.pane.about.label;"
-						image="chrome://mspdebughelper/skin/icons/about.48.png"
-						src="chrome://mspdebughelper/content/about.xul"/>
+						image="chrome://mspdebughelper/skin/icons/info.48.png"
+						src="chrome://mspdebughelper/content/preferences/about.xul"/>
+						
 	<prefpane id="paneDevice" label="&preferences.pane.device.label;"
 						image="chrome://mspdebughelper/skin/icons/connection.48.png"
 						src="chrome://mspdebughelper/content/preferences/device.xul" />
+						
 	<prefpane id="panePaths" label="&preferences.pane.paths.label;"
 						image="chrome://mspdebughelper/skin/icons/commands.48.png"
 						src="chrome://mspdebughelper/content/preferences/paths.xul" />
-	<prefpane id="paneCheck" label="&preferences.pane.check.label;"
-						image="chrome://mspdebughelper/skin/icons/checkbox.48.png"
-						src="chrome://mspdebughelper/content/preferences/verify.xul" />
 
 </prefwindow>

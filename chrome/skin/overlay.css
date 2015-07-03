@@ -1,0 +1,11 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#toolbar_button {
+  list-style-image: url("chrome://mspdebughelper/skin/icons/logo.24.png");
+}
+
+toolbar[iconsize="small"]
+
+#toolbar_button {
+  list-style-image: url("chrome://mspdebughelper/skin/icons/logo.16.png");
+}

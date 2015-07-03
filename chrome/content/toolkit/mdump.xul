@@ -69,10 +69,9 @@
           </rows>
         </grid> 
       </groupbox>
-    </hbox>
+    </hbox>    
     <groupbox flex="1">
       <label value="Console log :"/>
-      <separator />
       <textbox id="dumpConsole"
                style="font-family: mono;"
                flex="1"

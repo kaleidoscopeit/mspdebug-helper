@@ -1,0 +1,79 @@
+<!ENTITY mspdebughelper.menu.accesskey          "M">
+<!ENTITY mspdebughelper.info.label              "Informations">
+<!ENTITY mspdebughelper.pref.label              "Preferences">
+<!ENTITY mspdebughelper.console.label           "Debug console">
+<!ENTITY mspdebughelper.toolkit.label           "Tools">
+
+<!ENTITY console.title                          "MSPDebug Helper - Debug console">
+<!ENTITY console.window.width                   "640">
+<!ENTITY console.window.height                  "480">
+
+<!ENTITY console.anonymous.label                "Anonymous">
+<!ENTITY console.session.label                  "Session">
+<!ENTITY console.mspdebug.label                 "MspDebug">
+
+<!ENTITY preferences.pane.about.label           "Informations">
+<!ENTITY preferences.pane.device.label          "Connection">
+<!ENTITY preferences.pane.paths.label           "Paths">
+<!ENTITY preferences.title                      "MSPDebug Helper - Settings panel">
+<!ENTITY preferences.window.width               "480">
+<!ENTITY preferences.window.height              "200">
+
+<!ENTITY preferences.paths.files.title          "Select the commands path">
+<!ENTITY preferences.paths.mspdebug.label       "MSPDebug">
+<!ENTITY preferences.paths.mspdebug.accesskey   "m">
+<!ENTITY preferences.paths.libmsp430.label      "libmsp430">
+<!ENTITY preferences.paths.libmsp430.accesskey  "i">
+<!ENTITY preferences.paths.msp430gdb.label      "msp430-gdb">
+<!ENTITY preferences.paths.msp430gdb.accesskey  "g">
+<!ENTITY preferences.paths.pport.label          "pport">
+<!ENTITY preferences.paths.pport.accesskey      "r">
+
+<!ENTITY preferences.paths.workdir.title        "Select the working directory">
+<!ENTITY preferences.paths.workdir.label        "Path">
+<!ENTITY preferences.paths.workdir.accesskey    "P">
+
+<!ENTITY preferences.paths.choose.label          "Select...">
+<!ENTITY preferences.paths.choose.accesskey      "f">
+
+<!ENTITY toolkit.title								           "MSPDebug Helper - Tools">
+<!ENTITY toolkit.window.width					           "640">
+<!ENTITY toolkit.window.height				           "480">
+
+<!ENTITY toolkit.pane.commands.label	           "Commands">
+<!ENTITY toolkit.pane.program.label		           "Program">
+<!ENTITY toolkit.pane.mdump.label		             "Real mem.">
+
+<!ENTITY toolkit.program.label    		           "Authomatic procedure to load firmware">
+<!ENTITY toolkit.program.firmware.label          "Firmware : ">
+<!ENTITY toolkit.program.firmware.title          "Select the HEX file to load">
+<!ENTITY toolkit.program.choose.label            "Select...">
+<!ENTITY toolkit.program.choose.accesskey        "f">
+
+<!ENTITY toolkit.program.target.label            "Device : ">
+<!ENTITY toolkit.program.target.null             "Select device ...">
+<!ENTITY toolkit.program.target.auto             "Automatic detect">
+
+<!ENTITY toolkit.program.erase.label             "Erase :">
+<!ENTITY toolkit.program.erase.all               "All memory (ALL)">
+<!ENTITY toolkit.program.erase.fwmem             "Only program memory">
+
+<!ENTITY toolkit.program.do.label                "Execute : ">
+<!ENTITY toolkit.program.do.epv                  "EPV">
+<!ENTITY toolkit.program.do.erase                "Erase">
+<!ENTITY toolkit.program.do.prog                 "Program">
+<!ENTITY toolkit.program.do.ver                  "Verify">
+
+<!ENTITY toolkit.dump_mem.label    		           "Read and save target memory">
+<!ENTITY toolkit.dump_mem.type.label             "Read :">
+<!ENTITY toolkit.dump_mem.type.all               "All memory (ALL)">
+<!ENTITY toolkit.dump_mem.type.main              "Only program memory (MAIN)">
+<!ENTITY toolkit.dump_mem.type.info              "Only data memory (INFO)">
+<!ENTITY toolkit.dump_mem.type.segment           "A portion of memory (SEGMENT)">
+
+<!ENTITY toolkit.dump_mem.segment.label          "Range from :">
+<!ENTITY toolkit.dump_mem.segment.label2         "to :">
+<!ENTITY toolkit.dump_mem.progress.label         "Status">
+
+<!ENTITY toolkit.dump_mem.do.label               "Execute : ">
+<!ENTITY toolkit.dump_mem.do.read                "Read memory">

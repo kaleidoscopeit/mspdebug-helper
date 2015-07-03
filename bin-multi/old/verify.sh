@@ -1,5 +1,14 @@
 # ==============================================================================
 # Verify the target firmware
+#
+# returns :
+#
+# 0    -> verify complete
+# 1    -> verify failed
+# 2    -> firmware not selected
+# 3    -> error during original file chunk split
+# 4    -> error downloading firmware from device
+# 9    -> session check failed
 # ==============================================================================
 
 verify () {
@@ -10,17 +19,20 @@ verify () {
   if [ "$ret_val" -ne "0" ]; then
     debug -d "verify : session check failed.\n"
     # ------ EXIT CODE ------ #
-    return 3;
+    return 9;
   fi
 
   mkdir $paths_sessiondir/down_buffer
   mkdir $paths_sessiondir/orig_buffer
 
+  rm $paths_sessiondir/down_buffer/*.hex
+  rm $paths_sessiondir/orig_buffer/*.hex
+
   # Verify the complete cleanup of the cache directory
   if [ "`ls -l $paths_sessiondir/orig_buffer | grep -c '.*.hex'`" != "0" ] || 
      [ "`ls -l $paths_sessiondir/down_buffer | grep -c '.*.hex'`" != "0" ]; then
     debug -d "verify : cache directories not clean.\n"
-    return 4
+    return 2
   fi
 
   # local defines
@@ -38,11 +50,13 @@ verify () {
   local TARGET_CHUNKS
 
   # Check if the firmware file exists and its size is not zero
-  if [ ! -s $paths_sessiondir/firmware.hex ]; then
-    debug -d "verify : Firmware file error.\n"
-    return 4;
+  if [ ! -s $paths_sessiondir/firmware.hex -o \
+       ! -s $paths_sessiondir/firmware.conf ] ; then
+    debug -d "verify : Firmware not selected.\n"
+    # ------ EXIT CODE ------ #
+    return 2
   fi
-
+  
   # Read from source file and split it in sectors
   debug -d "verify : Split source file ... "
 
@@ -89,7 +103,7 @@ verify () {
     debug "FAIL.\n"
     debug -d "verify : Result of firmware split is zero chunks.\n"
     # ------ EXIT CODE ------ #
-    return 4
+    return 3
   fi
 
   # count the total size of the chunks files and compares with the size of
@@ -108,7 +122,7 @@ verify () {
       "splitted chunk size -> $orig_size.\n"
       
     # ------ EXIT CODE ------ #
-    return 4
+    return 3
   fi
 
   debug "OK.\n"
@@ -144,7 +158,7 @@ verify () {
       "chunk number ($target_chunks instead of $orig_chunks).\n"
     
     # ------ EXIT CODE ------ #
-    return 5;
+    return 4;
   fi
   
   # count the total size of the downloaded chunks files and compares with the
@@ -163,7 +177,7 @@ verify () {
       "downloaded chunk size -> $down_size.\n"
       
     # ------ EXIT CODE ------ #    
-    return 5
+    return 4
   fi
 
   debug "OK.\n"
@@ -181,8 +195,10 @@ verify () {
     DIFF_B=`md5sum -b $paths_sessiondir/down_buffer/$FILE | cut -f1 -d' '`
     if [ "$DIFF_A" != "$DIFF_B" ]; then
       debug "FAIL\n"
-      echo "verify : chunk file '$FILE' didn't match."
-      return 6
+      debug -d "verify : chunk file '$FILE' didn't match.\n"
+      
+      # ------ EXIT CODE ------ #
+      return 1
     else
       debug "OK\n"
       (( COUNT++))
@@ -190,4 +206,7 @@ verify () {
   done
 
   debug -d "verify : All worked without any interruption.\n"
+  
+  # ------ EXIT CODE ------ #
+  return 0
 }

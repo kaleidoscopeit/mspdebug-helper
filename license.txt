@@ -1,4 +1,4 @@
-Copyright (C) 2011-2012 Gabriele rossetti <gabriele@soundcafe.it>
+Copyright (C) 2011-2015 Gabriele rossetti <gabriele@soundcafe.it>
 
 MSPDebug Helper is free software, distributed under the terms of the GNU Gen-
 eral Public license (version 2 or later).

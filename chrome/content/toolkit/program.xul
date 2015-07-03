@@ -45,8 +45,8 @@
           			<menupopup>
           				<menuitem value="all"
           				          label="&toolkit.program.erase.all;"/>
-          				<menuitem value="main"
-          				          label="&toolkit.program.erase.main;"/>
+          				<menuitem value="fwmem"
+          				          label="&toolkit.program.erase.fwmem;"/>
           			</menupopup>
           		</menulist>
             </row>
@@ -99,7 +99,7 @@
     <groupbox flex="1">
       <label value="Console log :"/>
       <separator />
-      <textbox id="mainLog"
+      <textbox id="gdbLog"
                flex="1"
                multiline="true"/> 
     </groupbox>

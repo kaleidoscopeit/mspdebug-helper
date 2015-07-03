@@ -1,0 +1,17 @@
+2015-06-22
+
+- Added embedded "erase all" to the "program" procedure
+
+2015-04-09
+
+- After some testing days fall-back to mono session architecture.
+- Complete rewrite and cleanup of all procedures
+- Reworked the procedures file structure (by using the 'modules' subdir)
+- Added the browser panel icon in order to access easily to the plugin panels
+
+2015-03-30
+
+- Moved the architecture from single session to multisession
+- Reworked the firmware scraping functions in order to improve the efficiency
+- Modified the verify procedure in order to use the mspdebug internal feature
+- Added to the erase procedure the possibility to erase only firmware areas 

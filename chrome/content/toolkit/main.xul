@@ -14,13 +14,13 @@
 <?xul-overlay href="chrome://mspdebughelper/content/toolkit/program.xul"?>
 <?xul-overlay href="chrome://mspdebughelper/content/toolkit/mdump.xul"?>
 
-<window id="toolkitWindow"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+<window id="toolkitWindow"        
         title="&toolkit.title;"
         width="&toolkit.window.width;"
         height="&toolkit.window.height;"
         onload="toolkit.init()"
-        persist="width height screenX screenY">
+        persist="width height screenX screenY"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/x-javascript"
           src="chrome://mspdebughelper/content/toolkit/main.js" />
@@ -63,9 +63,26 @@
       <tabpanel id="PanelProgram"> </tabpanel>
       <tabpanel id="PanelMDump"> </tabpanel>
       <tabpanel id="panelCommands">
-        <button label="command"
-                oncommand="rawCommands.open_debug_session()"/>
+        <grid flex="1">
+          <columns>
+            <column flex="1"/>
+            <column />
+          </columns>
+          <rows>
+            <row style="margin-bottom:5px">
+              <button label="&toolkit.commands.updatefw.label;"
+                      oncommand="toolkit.fwupdate.start();"
+                      style="margin:-1px 5px -1px 5px"/>
+              <image id="status_ico_fwupdate"
+                     src="chrome://mspdebughelper/skin/icons/ok.png" />
+            </row>
+          </rows>
+        </grid> 
       </tabpanel>
     </tabpanels>
   </tabbox>
+  <hlay align="center" height="30">
+    <label value="&toolkit.dump_mem.progress.label;" />
+    <progressmeter id="progress" mode="determined" value="0" flex="1"/>
+   </hlay>
 </window>

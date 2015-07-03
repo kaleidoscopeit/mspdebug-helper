@@ -29,8 +29,6 @@
 		      label="MSPDebug Helper"
 		      accesskey="&mspdebughelper.menu.accesskey;">
 			<menupopup>
-				<menuitem label="&mspdebughelper.info.label;"
-				          oncommand="mspdebughelper.showAbout();"/>
 				<menuitem label="&mspdebughelper.pref.label;"
 				          oncommand="mspdebughelper.showPreferences();"/>
 				<menuitem label="&mspdebughelper.console.label;"
@@ -41,5 +39,21 @@
 		</menu>
 	</menupopup> 
 
+	<toolbarpalette id="BrowserToolbarPalette">
+	  <toolbarbutton id="toolbar_button"
+	                 class="toolbarbutton-1"
+	                 label="MSPDebugHelper"
+	                 tooltiptext="MSPDebugHelper"
+	                 type="menu-button">
+      <menupopup>
+        <menuitem label="&mspdebughelper.pref.label;"
+                  oncommand="mspdebughelper.showPreferences();"/>
+        <menuitem label="&mspdebughelper.toolkit.label;"
+                  oncommand="mspdebughelper.showToolkit();"/>
+        <menuitem label="&mspdebughelper.console.label;"
+                  oncommand="mspdebughelper.showConsole();"/>
+      </menupopup>
+    </toolbarbutton>
+	</toolbarpalette>
 </overlay>
 

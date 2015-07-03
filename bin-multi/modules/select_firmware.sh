@@ -1,19 +1,31 @@
-# ===============================================================================
+# =============================================================================
 # Copy or download the firmware file locally when a debug session is open
-# ===============================================================================
+#
+# returns :
+#
+# 0    -> firmware selected successfully
+# 1    -> remove firmware cache failed
+# 2    -> get firmware from source location failed
+#
+# 10   -> a foreign session is currently running
+#
+# 255  -> unmanaged error
+# =============================================================================
+
 
 select_firmware () {
 	local size
 	local ret_val
 
-	# Check session status
-	check_debug_session
-	ret_val=$?
+  # Check session status
+  check_debug_session
+  ret_val=$?
 
-	if [ "$ret_val" -ne "0" ]; then
-		debug -d "select_firmware : session check failed.\n"
-		return 3;
-	fi
+  if [ "$ret_val" -ne "0" ]; then
+    # ------ EXIT BREAKPOINT ------ #
+    debug -d "select_firmware : session check failed.\n"
+    return $(( ret_val+9 ))
+  fi
 
 	# Remove any previous downloaded firmware file
 	debug -d "select_firmware : remove any previous firmware cache ... "
@@ -21,9 +33,9 @@ select_firmware () {
 	rm -f $paths_sessiondir/firmware.conf
 
 	if [ -s $paths_sessiondir/firmware.hex ] ; then
+	  # ------ EXIT BREAKPOINT ------ #
 		debug "FAIL\n"
-		# ------ EXIT CODE ------ #
-		return 5
+		return 1
 	else
 		debug "OK\n"
 	fi
@@ -31,7 +43,8 @@ select_firmware () {
 	# Detect the file origin (local or remote)
 	if [ `echo "${argv[0]}" | grep -c 'http:\/\/'` = 1 ]; then
 		debug -d "select_firmware : Download firmware file into fimware.hex (${argv[0]}) ... " 
-		wget --output-document=$paths_sessiondir/firmware.hex "${argv[0]}" 1>$paths_sessiondir/wget.log 2>$paths_sessiondir/wget.log
+		wget --output-document=$paths_sessiondir/firmware.hex "${argv[0]}"\
+      1>$paths_sessiondir/wget.log 2>$paths_sessiondir/wget.log
 		BASENAME=`basename "${argv[0]}"`
 	else
 		debug -d "select_firmware : Copy firmware file into fimware.hex ... "
@@ -40,23 +53,25 @@ select_firmware () {
 	fi
 
 	if [ -s $paths_sessiondir/firmware.hex ] ; then
-		debug "OK\n"
 		# count the size of the firmware file
 		while read line; do
 			size=$(( size+0x${line:1:2} ))
 		done < $paths_sessiondir/firmware.hex
 
 		# write firmware data
-		echo `dirname "${argv[0]}"`"	$BASENAME	"`md5sum $paths_sessiondir/firmware.hex | cut -f1 -d' '`"	"$size>$paths_sessiondir/firmware.conf
+		echo `dirname "${argv[0]}"`"	$BASENAME	"`md5sum $paths_sessiondir/\
+      firmware.hex | cut -f1 -d' '`"	"$size>$paths_sessiondir/firmware.conf
 
-		# ------ EXIT CODE ------ #
+		# ------ EXIT BREAKPOINT ------ #
+    debug "OK\n"
 		return 0
 	else
+	  # ------ EXIT BREAKPOINT ------ #
 		debug "FAIL\n"
-		# ------ EXIT CODE ------ #
-		return 4
+		return 2
 	fi
 
 	# ------ EXIT POINT------ unmanaged error #
-	return 1
+  debug -d "select_firmware : Unmanaged error.\n"
+	return 255
 }
