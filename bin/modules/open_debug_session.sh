@@ -32,6 +32,11 @@ open_debug_session () {
     return $(( ret_val+10 ))
   fi
 
+  # Determine whether use the config link or the passed one in the arguments
+  if [ ! -z $1 ]; then
+    link=$1
+  fi  
+ 
 	# Find if a debug tool exists depending by the given driver
 	DEVICE=`find_device $driver`
 
@@ -52,7 +57,7 @@ open_debug_session () {
     DEVICE=`echo $DEVICE | sed -e 's/\/dev\///g'`;
   fi
 
-  # set link type
+  # set link type (really there's not a lot of options :D )
   if [ $link = "jtag" ]; then link="-j"; else link=""; fi
 
   # Starts a debug session

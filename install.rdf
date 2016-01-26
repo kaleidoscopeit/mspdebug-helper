@@ -7,7 +7,7 @@
 		<em:id>mspdebughelper@soundcafe.it</em:id>
 		<em:name>MSPDebug Helper</em:name>
 		<em:description>Allow to use Daniel Beer's 'MSPDebug' within a Web application</em:description>
-		<em:version>1.5.1</em:version>
+		<em:version>1.5.2</em:version>
 		<em:type>2</em:type>
 		<em:creator>Gabriele Rossetti</em:creator>
 		<em:homepageURL>https://github.com/kaleidoscopeit/mspdebug-helper</em:homepageURL>
