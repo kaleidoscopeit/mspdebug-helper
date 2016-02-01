@@ -24,35 +24,35 @@ mspdebughelper = {
       this.rpcListener,
       false,
       true
-    ); 
+    );
 
     // gets preferences
     this._prefService =
       Components.classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch)
         .getBranch("extensions.mspdebughelper.programmer.");
-        
 
-    this._prefService.addObserver("",{ 
+
+    this._prefService.addObserver("",{
       observe:function(subject,topic,data) {
         if(topic == "nsPref:changed") mspdebughelper.upgradeSettingsFile();
       }
     },false);
-    
-            
+
+
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.driver"));
 //alert(this._prefService.getCharPref("extensions.mspdebughelper.programmer.paths_mspdebug"));
 
     this._preferences = this._prefService.getChildList("",{});
 
     // Get the extension path
-    Components.utils.import("resource://gre/modules/AddonManager.jsm");    
+    Components.utils.import("resource://gre/modules/AddonManager.jsm");
 
     AddonManager.getAddonByID("mspdebughelper@soundcafe.it", function(addon)
     {
       mspdebughelper.addonLocation = addon.getResourceURI("")
         .QueryInterface(Components.interfaces.nsIFileURL).file.path;
-     
+
     });
 
     // Setup locale file reference
@@ -76,18 +76,18 @@ mspdebughelper = {
  *****************************************************************************/
   showPreferences: function() {
     if (null == this._preferencesWindow || this._preferencesWindow.closed) {
-      let instantApply = 
+      let instantApply =
         Application.prefs.get("browser.preferences.instantApply");
 
       let features = "chrome,titlebar,toolbar,centerscreen" +
                      (instantApply.value ? ",dialog=no" : ",modal");
-   
+
       this._preferencesWindow =
         window.openDialog(
           "chrome://mspdebughelper/content/preferences/main.xul",
           "mspdebughelper-preferences-window", features);
     }
- 
+
     this._preferencesWindow.focus();
   },
 
@@ -103,7 +103,7 @@ mspdebughelper = {
 
 
 /*****************************************************************************
- * Call programming functions 
+ * Call programming functions
  *****************************************************************************/
   callCommand: function(commandName, args, callback)
   {
@@ -136,17 +136,17 @@ mspdebughelper = {
       alert(this._bundlePreferences.getString("not_valid_program"));
       return false;
     }
-            
+
     var processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
 
     processInstance.init(commandInstance);
 
-    args.unshift(commandName);    
+    args.unshift(commandName);
     args.unshift(this.get_workdir());
 
     // executes the main process unless stop the program flow
-    processInstance.runAsync(args, args.length, { 
+    processInstance.runAsync(args, args.length, {
       observe:function(subject,topic,argv) {
         if (topic == "process-finished") {
           mspdebughelper.commandIsRunning = false;
@@ -184,7 +184,7 @@ mspdebughelper = {
 
     var processInstance = Components.classes["@mozilla.org/process/util;1"]
       .createInstance(Components.interfaces.nsIProcess);
-      
+
     processInstance.init(commandInstance);
 
     for (var key in this._preferences) {
@@ -196,7 +196,7 @@ mspdebughelper = {
       processInstance.run(true,data,data.length);
 
       if (processInstance.exitValue != 0) {
-        Application.console.log("mspdebughelper : " + 
+        Application.console.log("mspdebughelper : " +
           this._bundlePreferences.getFormattedString("processInstanceExitValue"
           ,[commandPath, processInstance.exitValue].concat(data.join(', '))));
         return false;
@@ -225,13 +225,13 @@ mspdebughelper = {
     var command = node.getAttribute("command");
     var callback = node.getAttribute("callback");
     var argv = Array();
-    
+
     node.removeAttribute("command");
-    node.removeAttribute("callback");    
-    
+    node.removeAttribute("callback");
+
 		for(var i=0;i<node.attributes.length;i++)
 		  argv.push(node.attributes[i].value);
-    
+
     // Call the function hub and builds a 'per-call' callback function
     return mspdebughelper.callCommand(command, argv, function(argv){
       if (!callback) return odoc.documentElement.removeChild(node);
@@ -256,7 +256,7 @@ mspdebughelper = {
 
     var file = this.get_file_instance(workdir, true, true);
 
-    if (file)    
+    if (file)
 
       return workdir;
 
@@ -283,12 +283,12 @@ mspdebughelper = {
     }
 
     var file = this.get_file_instance(mspdebug, true);
-     
+
     if (file) return mspdebug;
-     
+
     Application.console.log("mspdebughelper : " + this._bundlePreferences
       .getFormattedString("not_valid_mspdebug",[mspdebug]));
-      
+
     return false;
   },
 
@@ -315,7 +315,7 @@ mspdebughelper = {
     }
 
     if (this.get_file_instance(libmsp430)) return true;
-    
+
     Application.console.log("mspdebughelper : " + this._bundlePreferences
       .getFormattedString("not_valid_libmsp430",[]));
 
@@ -326,17 +326,17 @@ mspdebughelper = {
  * Read one of the debug files
  *****************************************************************************/
   read: function(target, param) {
-    
+
     var workDir = this.get_workdir();
     var path;
 
     if (!workDir) {
-      alert(this._bundlePreferences.getString("not_valid_workdir"));           
+      alert(this._bundlePreferences.getString("not_valid_workdir"));
       return false;
     }
 
     switch(target) {
-      case 'session' :   path = workDir + "/session.log";            break;      
+      case 'session' :   path = workDir + "/session.log";            break;
       case 'gdb' :       path = workDir + "/current/gdb.log";        break;
       case 'devices' :   path = workDir + "/devices.txt";            break;
       case 'anonymous' : path = "/tmp/mspdebughelper_anonymous.log"; break;
@@ -353,20 +353,21 @@ mspdebughelper = {
     var cstream = Components
                  .classes["@mozilla.org/intl/converter-input-stream;1"]
                  .createInstance(Components.interfaces.nsIConverterInputStream);
-                  
+
     fstream.init(file, -1, 0, 0);
     cstream.init(fstream, "UTF-8", 0, 0);
-     
-    let (str = {}) {
-      let read = 0;
-      do { 
+
+    {
+      var str = {};
+      var read = 0;
+      do {
         read  = cstream.readString(0xffffffff, str);
         data += str.value;
-      } while (read != 0);
+      } while (read !== 0);
     }
- 
+
     cstream.close();
-     
+
     return data;
   },
 
@@ -377,66 +378,66 @@ mspdebughelper = {
   {
     var file = Components.classes["@mozilla.org/file/local;1"]
               .createInstance(Components.interfaces.nsILocalFile);
-           
+
     file.initWithPath(path);
 
     if(!file.exists()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_exists_file",[path]));
-        
-      return false;     
+
+      return false;
     }
 
     if(!d & !file.isFile()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_a_file",[path]));
-        
-      return false;     
+
+      return false;
     }
 
     if(d & !file.isDirectory()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_a_directory",[path]));
-        
-      return false;     
+
+      return false;
     }
- 
+
     if(!file.isReadable()) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
         .getFormattedString("not_readable_file",[path]));
 
-      return false;      
+      return false;
     }
- 
+
     if(!file.isExecutable() & x) {
       Application.console.log("mspdebughelper : " + this._bundlePreferences
-        .getFormattedString("not_executable_file",[path]));      
+        .getFormattedString("not_executable_file",[path]));
 
       return false;
     }
-     
-    return file;    
+
+    return file;
   },
 
 /*****************************************************************************
  * File picker helper
- *****************************************************************************/  
-  f_picker: function(target)  
-  {  
-    const nsIFilePicker = Components.interfaces.nsIFilePicker;  
-    const nsILocalFile  = Components.interfaces.nsILocalFile;  
-    
-    var fp = Components.classes["@mozilla.org/filepicker;1"]  
-                       .createInstance(nsIFilePicker);  
-    
-    var title = target.getAttribute("title");  
-    
-    fp.appendFilters(nsIFilePicker.filterApps);  
-    fp.init(window, title, nsIFilePicker.modeOpen);  
-    
-    if (fp.show() == nsIFilePicker.returnOK) {  
-  	 target.value = fp.file.path;  
-    }  
+ *****************************************************************************/
+  f_picker: function(target)
+  {
+    const nsIFilePicker = Components.interfaces.nsIFilePicker;
+    const nsILocalFile  = Components.interfaces.nsILocalFile;
+
+    var fp = Components.classes["@mozilla.org/filepicker;1"]
+                       .createInstance(nsIFilePicker);
+
+    var title = target.getAttribute("title");
+
+    fp.appendFilters(nsIFilePicker.filterApps);
+    fp.init(window, title, nsIFilePicker.modeOpen);
+
+    if (fp.show() == nsIFilePicker.returnOK) {
+  	 target.value = fp.file.path;
+    }
   }
 }
 
@@ -450,4 +451,3 @@ window.addEventListener(
   false,
   true
 );
-

@@ -1,3 +1,8 @@
+2016-02-01
+
+- Fixed code.
+  Bug : let blocks support has been dropped in Gecko 44 (bug 1167029)
+
 2015-06-22
 
 - Added embedded "erase all" to the "program" procedure
@@ -14,4 +19,17 @@
 - Moved the architecture from single session to multisession
 - Reworked the firmware scraping functions in order to improve the efficiency
 - Modified the verify procedure in order to use the mspdebug internal feature
-- Added to the erase procedure the possibility to erase only firmware areas 
+- Added to the erase procedure the possibility to erase only firmware areas
+
+2012-08-01
+
+- Fixed write string function in order to avoid overlapping of sequences of
+  erases and writes
+
+2012-05-14
+
+- Various cleans to the project root
+
+2012-02-01
+
+- Complete rewrite of the previous plugin
