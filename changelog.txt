@@ -1,35 +1,95 @@
-2016-02-01
+v1.5.4 (2016-03-14) (Not committed on GitHub)
+
+- in BrowserOverlay.js near "gets preferences" fixed the error
+  "getBranch is not a function" by changing following :
+
+    ...
+
+    - .getService(Components.interfaces.nsIPrefBranch)
+    + .getService(Ci.nsIPrefService)
+
+    ...
+    
+v1.5.3 (2016-02-01)
 
 - Fixed code.
   Bug : let blocks support has been dropped in Gecko 44 (bug 1167029)
 
-2015-06-22
+v1.5.2 (2016-01-26)
+
+-	 Bug fixes
+
+
+v1.5.1 (2015-07-03)
 
 - Added embedded "erase all" to the "program" procedure
 
-2015-04-09
+v1.5.1a (2015-04-09)
 
 - After some testing days fall-back to mono session architecture.
 - Complete rewrite and cleanup of all procedures
 - Reworked the procedures file structure (by using the 'modules' subdir)
 - Added the browser panel icon in order to access easily to the plugin panels
 
-2015-03-30
+v1.5.0 (2015-03-30)
 
 - Moved the architecture from single session to multisession
 - Reworked the firmware scraping functions in order to improve the efficiency
 - Modified the verify procedure in order to use the mspdebug internal feature
 - Added to the erase procedure the possibility to erase only firmware areas
 
-2012-08-01
 
-- Fixed write string function in order to avoid overlapping of sequences of
-  erases and writes
+v1.0.0 (2013-08-02) (official release)
 
-2012-05-14
+Finalized plugin rework :
 
-- Various cleans to the project root
+- Added Sessions history
+- Autodetect first available 'tool' by selected driver
+- Fix compatibility with Firefox 18.0+
+- Untrusted code reworked
+- Added "Autoswitch interface" control using pport
+- positive exit codes partially moved from 0 to 1
+- Monitoring functions reworked
+- Improved constraint over 'mspdebug' logging monitoring
 
-2012-02-01
+ 
+v0.9.0 (2013-02-22) (pre official release)
 
-- Complete rewrite of the previous plugin
+Completely plugin rework :
+
+- Added a preference system embedded in Firefox
+- Added stand alone fuctions
+- Added Preferences panel
+- Added Debug console panel
+- Added support for OLIMEX JTAG TINY V2
+
+
+v0.4.2 (2012-12-11)
+
+- Better logging
+- FF version fix
+
+
+v0.4.1
+
+- Better logging
+
+
+v0.4.0
+
+- Speed improovements globally
+
+
+v0.3.0
+
+- Speed improovements in verify
+
+
+v0.2.0
+
+- write string fixes
+
+
+v0.1.0
+
+- Initial release

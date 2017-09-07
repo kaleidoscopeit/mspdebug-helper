@@ -42,7 +42,7 @@ find_device () {
 			local vendor=`udevadm info --query=property --name=$acms |\
 				grep -c -i "ID_VENDOR_ID=2047"`
 			local product=`udevadm info --query=property --name=$acms |\
-				grep -c -i "ID_MODEL_ID=0010"`
+				grep -c -i "ID_MODEL_ID=0014\|ID_MODEL_ID=0010"`
 
 			if [ $vendor = "1" -a $product = "1" ]
 			then

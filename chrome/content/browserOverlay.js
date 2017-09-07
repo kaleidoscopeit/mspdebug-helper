@@ -29,7 +29,7 @@ mspdebughelper = {
     // gets preferences
     this._prefService =
       Components.classes["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefBranch)
+        .getService(Ci.nsIPrefService)
         .getBranch("extensions.mspdebughelper.programmer.");
 
 
@@ -76,11 +76,11 @@ mspdebughelper = {
  *****************************************************************************/
   showPreferences: function() {
     if (null == this._preferencesWindow || this._preferencesWindow.closed) {
-      let instantApply =
-        Application.prefs.get("browser.preferences.instantApply");
+//      let instantApply =
+//        Application.prefs.get("browser.preferences.instantApply");
 
-      let features = "chrome,titlebar,toolbar,centerscreen" +
-                     (instantApply.value ? ",dialog=no" : ",modal");
+      let features = "chrome,titlebar,toolbar,centerscreen" 
+//                 +  (instantApply.value ? ",dialog=no" : ",modal");
 
       this._preferencesWindow =
         window.openDialog(
